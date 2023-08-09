@@ -3,6 +3,16 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import *
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
+
+# Group check 
+
+def is_buyer(user):
+    return user.groups.filter(name='Buyer').exists()
+
+def is_seller(user):
+    return user.groups.filter(name='Seller').exists()
+
 # Create your views here.
 
 def user_login(request):
@@ -22,15 +32,18 @@ def page_login(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                if user.is_superuser:
+                if is_seller(user):
                     return HttpResponseRedirect('/dashboard')
-                else:
+                elif is_buyer(user):
                     return HttpResponseRedirect('/')
+                else:
+                    raise Exception()
     
 
 def homepage(request):
     return render(request, "user/homepage.html")
 
 @login_required(login_url="/admin_login")
+@user_passes_test(is_seller)
 def dashboard(request):
     return render(request, "seller/dashboard.html")
