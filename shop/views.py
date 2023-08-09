@@ -6,7 +6,10 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def user_login(request):
-    return render(request, "user_login.html")
+    return render(request, "user/user_login.html")
+
+def admin_login(request):
+    return render(request, "seller/seller_login.html")
 
 def page_login(request):
     logout(request)
@@ -20,10 +23,14 @@ def page_login(request):
             if user.is_active:
                 login(request, user)
                 if user.is_superuser:
-                    return HttpResponseRedirect('/admin')
+                    return HttpResponseRedirect('/dashboard')
                 else:
                     return HttpResponseRedirect('/')
     
 
 def homepage(request):
-    return render(request, "homepage.html")
+    return render(request, "user/homepage.html")
+
+@login_required(login_url="/admin_login")
+def dashboard(request):
+    return render(request, "seller/dashboard.html")
