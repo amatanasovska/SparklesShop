@@ -47,3 +47,12 @@ def homepage(request):
 @user_passes_test(is_seller)
 def dashboard(request):
     return render(request, "seller/dashboard.html")
+
+def manage_users(request):
+    return render(request, "seller/users_management.html")
+
+def manage_products(request):
+    return render(request, "seller/products_management.html")
+
+def manage_orders(request):
+    return render(request, "seller/orders_management.html")

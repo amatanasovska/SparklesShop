@@ -27,5 +27,9 @@ urlpatterns = [
     path('admin_login/', admin_login, name="admin_login"),
     # actual login
     path('user_login/', page_login, name="user_login"),
-    path('dashboard/', dashboard, name="dashboard")
+    path('dashboard/', dashboard, name="dashboard"),
+    path('users/', manage_users, name="manage_users"),
+    path('products/', manage_products, name="manage_products"),
+    path('orders/', manage_orders, name="manage_orders"),
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
