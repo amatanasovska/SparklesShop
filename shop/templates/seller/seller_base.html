@@ -1,48 +1,17 @@
 {% extends "../base.html" %}
 {% block main %}
 <nav class="navbar navbar-expand-lg navbar-light px-3 d-flex justify-content-around" id="seller-nav" style="background-color: rgb(240, 185, 185);">
-    <div class="navbar-brand fw-bold" style="font-size: 35px; color: white;">Sparkles</div>
-    <div class="navbar-brand fw-bold" style="font-size: 20px; color: rgb(125,61,61); border-bottom: solid 2px rgb(221,143,143);">Manage users</div>
-    <div class="navbar-brand fw-bold" style="font-size: 20px; color: rgb(125,61,61); border-bottom: solid 2px rgb(221,143,143); ">Manage products</div>
-    <div class="navbar-brand fw-bold" style="font-size: 20px; color: rgb(125,61,61); border-bottom: solid 2px rgb(221,143,143);">Manage orders</div>
+    <div class="navbar-brand fw-bold" style="font-size: 35px; color: white;"><a href="/dashboard">Sparkles</a></div>
+    <div class="navbar-brand fw-bold" style="font-size: 20px; color: rgb(125,61,61); border-bottom: solid 2px rgb(221,143,143);">
+        <a href="/users">Manage users</a></div>
+    <div class="navbar-brand fw-bold" style="font-size: 20px; color: rgb(125,61,61); border-bottom: solid 2px rgb(221,143,143); ">
+        <a href="/products">Manage products</a></div>
+    <div class="navbar-brand fw-bold" style="font-size: 20px; color: rgb(125,61,61); border-bottom: solid 2px rgb(221,143,143);">
+        <a href="/orders">Manage orders</a></div>
     <div class="navbar-brand fw-bold" style="font-size: 15px; color: rgb(255,255,255);">
         <div style="position: absolute; top: 0; right:0;" class="mx-4 my-1">Welcome, admin</div>
     </div>  
   </nav>
-<div id="dashboard_body">
-
-    
-    <div class="px-5 py-3" style="width: 100%; height: 100%;">
-        <div style="background-color: rgba(255, 255, 255, 0.5); width: 100%; height: 100%;">
-            <div class="container py-5">
-                <div class="row py-5">
-                    <div class="col">Latest stats for your page</div>
-                    <div class="col">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent pellentesque augue eu tellus tincidunt, sodales eleifend ipsum dictum. Vivamus lobortis facilisis dolor et aliquet. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut suscipit sollicitudin dictum. In nec interdum nisl, sed euismod purus. Nulla placerat mi ut venenatis rutrum. Morbi lacus purus, facilisis ac turpis ac, bibendum hendrerit purus. Sed dignissim tortor nec massa facilisis aliquet. Suspendisse mollis mollis eros, in placerat massa elementum at. Vivamus efficitur aliquam risus ac fermentum. In suscipit tempor metus vitae lobortis. Nullam volutpat luctus varius. 
-                        Maecenas pulvinar pellentesque nunc sed posuere. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</div>
-                </div>
-                <div class="row my-5">
-                    <div class="col">
-                        <div class="row">Most visited page</div>
-                        <div class="row">
-                            <div class="col">
-                                <img/>
-                            </div>
-                            <div class="col">
-                                <h3>Product name</h3>
-                                <p>info 1</p>
-                                <p>info 2</p>
-                                <p>info 3</p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-      
-</div>
     {% block content %}
     {% endblock %}
 {% endblock %}

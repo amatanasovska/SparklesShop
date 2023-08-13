@@ -1,0 +1,16 @@
+#seller_login_body
+{
+    background-color: rgb(240, 185, 185);
+    width: 100%;
+    height:100%;
+}
+#login
+{
+    background-color: rgba(255, 255, 255, 0.59);
+    border-radius: 10px;
+}
+#admin_login_btn
+{
+    background-color: rgb(255, 136, 136); 
+    color: white;
+}

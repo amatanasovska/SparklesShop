@@ -1,0 +1,25 @@
+#dashboard_body
+{ 
+    background-color: rgb(240, 185, 185);
+    width: 100%;
+    height:100%;
+}
+#add_product_btn
+{
+    background-color: rgb(255, 136, 136); 
+    color: white;
+    width: 50%;
+}
+#table_header
+{
+    color: rgb(195, 115, 115);
+    font-size: 25px;
+    border-bottom:rgb(195, 115, 115) solid 1px ;
+    font-weight: bold;
+}
+.table_rows
+{
+    color: rgb(255,255,255);
+    font-size: 25px;
+
+}

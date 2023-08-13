@@ -1,0 +1,23 @@
+body
+{
+    width: 100%;
+    height: 100%;
+}
+html
+{
+    width: 100%;
+    height: 100%;
+}
+#seller-nav
+{
+    background-color: rgb(240, 185, 185);
+}
+a
+{
+    text-decoration: none;
+    color: inherit;
+}
+a:hover
+{
+    color: inherit;
+}
