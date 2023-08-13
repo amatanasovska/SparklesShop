@@ -48,11 +48,17 @@ def homepage(request):
 def dashboard(request):
     return render(request, "seller/dashboard.html")
 
+@login_required(login_url="/admin_login")
+@user_passes_test(is_seller)
 def manage_users(request):
     return render(request, "seller/users_management.html")
 
+@login_required(login_url="/admin_login")
+@user_passes_test(is_seller)
 def manage_products(request):
     return render(request, "seller/products_management.html")
 
+@login_required(login_url="/admin_login")
+@user_passes_test(is_seller)
 def manage_orders(request):
     return render(request, "seller/orders_management.html")
