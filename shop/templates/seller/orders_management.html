@@ -12,18 +12,18 @@
     </div>
     <div class="container">
         <div class="row" id="table_header">
-            <div class="col-md-2">ID</div>
+            <div class="col-md-3">ID</div>
             <div class="col-md-6">User</div>
-            <div class="col-md-2">Details</div>
+            <div class="col-md-3">Details</div>
         </div>
+        {% for order in orders %}
         <div class="row table_rows">
-            <div class="col-md-2">ID</div>
-            <div class="col-md-6">User</div>
-            <div class="col-md-2">See more</div>
+            <div class="col-md-3">{{order.id}}</div>
+            <div class="col-md-6">{{order.user.username}}</div>
+            <div class="col-md-3">See more</div>
         </div>
-        <div class="row">
-
-        </div>
+        {% endfor %}
+        
         
     </div>
 </div>

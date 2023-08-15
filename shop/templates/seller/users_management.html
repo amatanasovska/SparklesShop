@@ -16,14 +16,13 @@
             <div class="col-md-6">Username</div>
             <div class="col-md-3">Details</div>
         </div>
-        <div class="row table_rows">
-            <div class="col-md-3">ID</div>
-            <div class="col-md-6">Username</div>
-            <div class="col-md-3">See more</div>
-        </div>
-        <div class="row">
-
-        </div>
+            {% for user in users %}
+                <div class="row table_rows">
+                    <div class="col-md-3">{{user.id}}</div>
+                    <div class="col-md-6">{{user.username}}</div>
+                    <div class="col-md-3">See more</div>
+                </div>
+            {% endfor %}
         
     </div>
 </div>

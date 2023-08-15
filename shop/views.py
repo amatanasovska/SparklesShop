@@ -4,6 +4,9 @@ from django.http import *
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
+from shop.models import *
+
+from sparklesapp.forms import ProductForm
 
 # Group check 
 
@@ -51,14 +54,36 @@ def dashboard(request):
 @login_required(login_url="/admin_login")
 @user_passes_test(is_seller)
 def manage_users(request):
-    return render(request, "seller/users_management.html")
+    context= dict()
+    context["users"] = User.objects.all()
+    return render(request, "seller/users_management.html", context=context)
 
 @login_required(login_url="/admin_login")
 @user_passes_test(is_seller)
 def manage_products(request):
-    return render(request, "seller/products_management.html")
+    context= dict()
+    context["products"] = Product.objects.all()
+    
+    return render(request, "seller/products_management.html", context=context)
 
 @login_required(login_url="/admin_login")
 @user_passes_test(is_seller)
 def manage_orders(request):
-    return render(request, "seller/orders_management.html")
+    context= dict()
+    context["orders"] = Order.objects.all()
+    return render(request, "seller/orders_management.html", context=context)
+
+@login_required(login_url="/admin_login")
+@user_passes_test(is_seller)
+def add_product(request):
+    if request.method == "POST":
+        form_data = ProductForm(data=request.POST, files=request.FILES)
+        if form_data.is_valid():
+            product = form_data.save(commit=False)
+            product.image = form_data.cleaned_data["image"]
+            product.save()
+            return redirect("/products")
+    context = dict()
+    context["form"] = ProductForm
+    
+    return render(request, "seller/add_product.html", context=context)

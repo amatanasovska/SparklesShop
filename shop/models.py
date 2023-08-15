@@ -9,7 +9,8 @@ class ShoppingCart(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
-
+    def __str__(self) -> str:
+        return self.name
 class Product(models.Model):
     name = models.CharField(max_length=255)
     quantity = models.IntegerField()

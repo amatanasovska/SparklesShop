@@ -23,3 +23,14 @@
     font-size: 25px;
 
 }
+#submit_product_btn
+{
+    background-color: rgb(240, 130, 130);
+    color: white;
+    font-weight: bold;
+}
+#add_product_form_container
+{
+    color: white;
+    font-weight: bold;
+}

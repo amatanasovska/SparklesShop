@@ -31,5 +31,5 @@ urlpatterns = [
     path('users/', manage_users, name="manage_users"),
     path('products/', manage_products, name="manage_products"),
     path('orders/', manage_orders, name="manage_orders"),
-    
+    path('add_product/', add_product, name="manage_orders"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -9,7 +9,7 @@
             <i class="bx bx-search"></i>
             </div>
         </div>
-        <div class="col"><button id="add_product_btn" class="form-control btn">Add product</button></div>
+        <div class="col"><a href="/add_product"><button id="add_product_btn" class="form-control btn">Add product</button></a></div>
     </div>
     <div class="container">
         <div class="row" id="table_header">
@@ -18,15 +18,15 @@
             <div class="col-md-2">Quantity</div>
             <div class="col-md-2">Details</div>
         </div>
-        <div class="row table_rows">
-            <div class="col-md-2">ID</div>
-            <div class="col-md-6">Name</div>
-            <div class="col-md-2">Quantity</div>
-            <div class="col-md-2">See more</div>
-        </div>
-        <div class="row">
-
-        </div>
+            {% for product in products %}
+                <div class="row table_rows">
+                    <div class="col-md-2">{{product.id}}</div>
+                    <div class="col-md-6">{{product.name}}</div>
+                    <div class="col-md-2">{{product.quantity}}</div>
+                    <div class="col-md-2">See more</div>
+                </div>
+            {% endfor %}
+        
         
     </div>
 </div>
