@@ -126,3 +126,21 @@ def product_details(request):
                                              "category" : product.category})
     
     return render(request, "seller/add_product.html", context=context)
+
+@login_required(login_url="/admin_login")
+@user_passes_test(is_seller)
+def user_details(request):
+    id = request.GET.get('id', None)
+
+    user = User.objects.filter(id=id).first()
+    context = dict()
+    
+    context["user"] = user
+    
+    return render(request, "seller/user_details.html", context=context)
+
+@login_required(login_url="/admin_login")
+@user_passes_test(is_seller)
+def admin_logout(request):
+    logout(request)
+    return render(request, "seller/logout.html")
