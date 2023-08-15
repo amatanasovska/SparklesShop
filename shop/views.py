@@ -87,3 +87,42 @@ def add_product(request):
     context["form"] = ProductForm
     
     return render(request, "seller/add_product.html", context=context)
+
+@login_required(login_url="/admin_login")
+@user_passes_test(is_seller)
+def product_details(request):
+    print("ITS ANYKIND METHOD")
+    id = request.GET.get('id', None)
+
+    product = Product.objects.filter(id=id).first()
+    
+    if request.method == "POST":
+        form_data = ProductForm(data=request.POST, files=request.FILES)
+        print(form_data.errors)
+        if form_data.is_valid():
+            # product = form_data.save(commit=False)
+            print(form_data.cleaned_data["name"])
+            product.name = form_data.cleaned_data["name"]
+            product.quantity = form_data.cleaned_data["quantity"]
+            img =form_data.cleaned_data["image"]
+            if img:
+                product.image = form_data.cleaned_data["image"]
+            product.price = form_data.cleaned_data["price"]
+            product.description = form_data.cleaned_data["description"]
+            product.category = form_data.cleaned_data["category"]
+            product.save()
+            print("ITS POST METHOD")
+            return redirect("/products")
+    if id is None:
+        return redirect("/products")
+    context = dict()
+    
+    context["form"] = ProductForm(initial = {"id": id,
+                                            "name" : product.name,
+                                             "quantity" : product.quantity,
+                                             "image" : product.image,
+                                             "price" : product.price,
+                                             "description" : product.description,
+                                             "category" : product.category})
+    
+    return render(request, "seller/add_product.html", context=context)
