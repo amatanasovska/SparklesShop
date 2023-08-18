@@ -3,22 +3,19 @@
 {% block content %}
 <!-- Slideshow container -->
 <div class="my-4">
-  <div>
+  <div class=" w-100">
     <div class="slideshow-container">
 
         <!-- Full-width images with number and caption text -->
         <div class="mySlides fade" style="display: block; opacity: 1;">
-          <div class="numbertext">1 / 3</div>
           <img src="{% static 'images/img1.png' %}" style="width:100%">
         </div>
       
         <div class="mySlides fade" style="display: none; opacity: 1;">
-          <div class="numbertext">2 / 3</div>
           <img src="{% static 'images/img2.png' %}" style="width:100%">
         </div>
       
         <div class="mySlides fade" style="display: none; opacity: 1;">
-          <div class="numbertext">3 / 3</div>
           <img src="{% static 'images/img3.png' %}" style="width:100%">
         </div>
       
@@ -29,11 +26,11 @@
       <br>
       
       <!-- The dots/circles -->
-      <div style="text-align:center">
+      <!-- <div style="text-align:center">
         <span class="dot active" onclick="currentSlide(1)"></span>
         <span class="dot" onclick="currentSlide(2)"></span>
         <span class="dot" onclick="currentSlide(3)"></span>
-      </div>
+      </div> -->
   </div>
   <div>
     <h2 class="text-center my-3">New arrivals</h1>
