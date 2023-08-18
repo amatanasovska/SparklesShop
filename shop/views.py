@@ -150,6 +150,8 @@ def homepage(request):
     context = dict()
     context['brands'] = Brand.objects.all()
     context['categories']= Category.objects.all()
+    latest_products = Product.objects.all()
+    context['latest_products'] =latest_products[len(latest_products)-3:]
     return render(request, "user/homepage.html", context=context)
 
 

@@ -9,7 +9,7 @@
     <div class="row">
         {% for product in products %}
         <div class="col-md-4 card_custom p-5 m-3" style="width: 18rem;">
-            <img src="{{product.image.url}}" class="card-img-top my-3" alt="..." height="50%">
+            <img src="{{product.image.url}}" class="card-img-top" alt="..." style="height:200px">
             <div class="card-body">
               <h5 class="card-title">{{product.name}}</h5>
               <p class="card-text">{{product.price}}$</p>
