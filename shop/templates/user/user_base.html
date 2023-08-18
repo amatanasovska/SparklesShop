@@ -33,10 +33,27 @@
           <a>Sign in</a>
     </div>
   </nav>
-  <div class="container">
+  <div>
 
   
     {% block content %}
     {% endblock %}
     </div>
+    <div class="footer my-5" style="height: 400px;">
+        <div class="row h-100">
+          <div class="col-md-3 d-flex align-items-center justify-content-end my-4" style="border-right: white 3px solid;">
+            <h1 class="text-center fw-bold" style="color: white;">Sparkles</h1>
+          </div>
+          <div class="col d-flex flex-column justify-content-center align-items-start" style="color: white;">
+            <h6>Contact</h6>
+            <p>111-111-1111</p>
+            <br>
+            <h6>Address</h6>
+            <p>No.5 Hill Street</p>
+            <br>
+            <h6>Customer support</h6>
+            <p>support@sparkles.com</p>
+          </div>
+        </div>
+      </div>
 {% endblock %}
