@@ -1,0 +1,25 @@
+{% extends "user/user_base.html" %}
+{% load static %}
+{% block content %}
+<div>
+    <div class="title_div m-5">
+        <h2>{{title}}</h2>
+    </div>
+    <div class="m-5">
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 card_custom p-5 m-3" style="width: 18rem;">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">{{product.name}}</h5>
+              <p class="card-text">{{product.price}}$</p>
+              <div class="d-flex justify-content-center">
+                  <a href="#" class="btn add_cart_btn_hp">Add to cart</a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+    </div>
+    </div>
+</div>
+{% endblock %}

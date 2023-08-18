@@ -11,6 +11,12 @@ class Category(models.Model):
     name = models.CharField(max_length=255)
     def __str__(self) -> str:
         return self.name
+
+class Brand(models.Model):
+    name = models.CharField(max_length=255)
+    def __str__(self) -> str:
+        return self.name
+
 class Product(models.Model):
     name = models.CharField(max_length=255)
     quantity = models.IntegerField()
@@ -18,6 +24,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to='images', blank=True)
     description = models.TextField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, blank=True, null=True)
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

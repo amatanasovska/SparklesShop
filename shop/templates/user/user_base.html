@@ -4,10 +4,29 @@
     <div class="navbar-brand fw-bold" style="font-size: 35px; color: white;"><a href="/">Sparkles</a></div>
     <div class=" mx-3 d-flex flex-row">
         <div class="navbar-brand fw-bold mx-5" style="font-size: 20px; color: white; font-weight: lighter;">
-        Categories
+        
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Categories
+            </a>
+            <ul class="dropdown-menu">
+                {% for category in categories %}
+                    <li><a class="dropdown-item" href="/categories?id={{category.id}}">{{category.name}}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
     <div class="navbar-brand fw-bold  mx-5" style="font-size: 20px; color: white;  font-weight: lighter;">
-        Brands
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Brands
+            </a>
+            <ul class="dropdown-menu">
+                {% for brand in brands %}
+                    <li><a class="dropdown-item" href="/brands?id={{brand.id}}">{{brand.name}}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
     <div class="navbar-brand fw-bold  mx-5" style="font-size: 20px; color: white;  font-weight: lighter;">
         Locator

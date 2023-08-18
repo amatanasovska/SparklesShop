@@ -29,3 +29,19 @@ class ProductAdmin(admin.ModelAdmin):
     #     return request.user.is_superuser
     
 admin.site.register(Product, ProductAdmin)
+
+
+class BrandAdmin(admin.ModelAdmin):
+    fields = ('name',)
+
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+    # def has_view_permission(self, request, obj=None):
+    #     return request.user.is_superuser
+    
+admin.site.register(Brand, BrandAdmin)
+
+

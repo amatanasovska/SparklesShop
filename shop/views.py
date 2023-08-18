@@ -43,8 +43,7 @@ def page_login(request):
                     raise Exception()
     
 
-def homepage(request):
-    return render(request, "user/homepage.html")
+
 
 @login_required(login_url="/admin_login")
 @user_passes_test(is_seller)
@@ -110,6 +109,7 @@ def product_details(request):
             product.price = form_data.cleaned_data["price"]
             product.description = form_data.cleaned_data["description"]
             product.category = form_data.cleaned_data["category"]
+            product.brand = form_data.cleaned_data["brand"]
             product.save()
             print("ITS POST METHOD")
             return redirect("/products")
@@ -123,7 +123,8 @@ def product_details(request):
                                              "image" : product.image,
                                              "price" : product.price,
                                              "description" : product.description,
-                                             "category" : product.category})
+                                             "category" : product.category,
+                                             "brand" : product.brand})
     
     return render(request, "seller/add_product.html", context=context)
 
@@ -144,3 +145,32 @@ def user_details(request):
 def admin_logout(request):
     logout(request)
     return render(request, "seller/logout.html")
+
+def homepage(request):
+    context = dict()
+    context['brands'] = Brand.objects.all()
+    context['categories']= Category.objects.all()
+    return render(request, "user/homepage.html", context=context)
+
+
+def categories(request):
+    context = dict()
+    context['brands'] = Brand.objects.all()
+    context['categories']= Category.objects.all()
+    id = request.GET.get('id', None)
+    category = Category.objects.filter(id=id).first()
+    products = Product.objects.filter(category__id=id).all()
+    context['products'] = products
+    context['title'] = f"Products from the category {category.name}"
+    return render(request, "user/product_list.html", context=context)
+
+def brands(request):
+    context = dict()
+    context['brands'] = Brand.objects.all()
+    context['categories']= Category.objects.all()
+    id = request.GET.get('id', None)
+    brand = Brand.objects.filter(id=id).first()
+    products = Product.objects.filter(brand__id=id).all()
+    context['products'] = products
+    context['title'] = f"Products from the brand {brand.name}"
+    return render(request, "user/product_list.html", context=context)
