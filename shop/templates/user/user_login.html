@@ -1,28 +1,40 @@
-{% extends "user/user_base.html" %}
+{% extends "user/user_base_no_footer.html" %}
 {% block content %}
-<div id="login">
-    <form class="form-horizontal" name="LoginForm" action="/user_login/" method="post">
-    {% csrf_token %}
-    {% if next %}
-        <input type="hidden" name="next" value="{{ next }}" />
-    {% endif %}
-    <div class="control-group">
-        <label class="control-label" for="username">Username</label>
-        <div class="controls">
-            <input type="text" id="username" name="username"  placeholder="Username">
+<div id="login_body">
+    <nav class="navbar navbar-expand-lg navbar-light px-3 d-flex justify-content-center">
+        <a class="navbar-brand fw-bold" style="font-size: 35px; color: white;" href="/">Sparkles</a>
+    </nav>
+    <div style="width: 100%;" class="d-flex justify-content-center">
+      <div id="login" class="m-5 p-5">
+        <h5 class="text-center p-2">Login</h2>
+        <form class="form-horizontal" name="LoginForm" action="/user_login/" method="post">
+        {% csrf_token %}
+        {% if next %}
+            <input type="hidden" name="next" value="{{ next }}" />
+        {% endif %}
+        <div class="control-group">
+            <label class="control-label" for="username">Username</label>
+            <div class="controls">
+                <input type="text" id="username" name="username" class="form-control" placeholder="Username">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="password">Password</label>
+            <div class="controls">
+                <input type="password" name="password" id="password" class="form-control" placeholder="Password">
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls m-3">
+                <button type="submit" class="form-control btn" id="admin_login_btn">Login</button>
+            </div>
+        </div>
+        <div>
+            <p>Don't have an account? <a href="/register">Register</a></p>
+        </div>
+        </form>
         </div>
     </div>
-    <div class="control-group">
-        <label class="control-label" for="password">Password</label>
-        <div class="controls">
-            <input type="password" name="password" id="password" placeholder="Password">
-        </div>
     </div>
-    <div class="control-group">
-        <div class="controls">
-            <button type="submit" class="btn">Login</button>
-        </div>
-    </div>
-    </form>
-</div>
+
 {% endblock %}

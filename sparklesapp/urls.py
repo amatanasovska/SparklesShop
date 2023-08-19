@@ -25,6 +25,7 @@ urlpatterns = [
     path('', homepage, name="homepage"),
     path('login/', user_login, name="login"),
     path('admin_login/', admin_login, name="admin_login"),
+    path('register/', register,name="register"),
     # actual login
     path('user_login/', page_login, name="user_login"),
     path('dashboard/', dashboard, name="dashboard"),

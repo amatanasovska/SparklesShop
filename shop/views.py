@@ -40,7 +40,7 @@ def page_login(request):
                 elif is_buyer(user):
                     return HttpResponseRedirect('/')
                 else:
-                    raise Exception()
+                    raise Exception("No role assigned to user please assign seller or buyer role.")
     
 
 
@@ -185,4 +185,6 @@ def product(request):
     product = Product.objects.filter(id=id).first()
     context['product'] = product
     return render(request, "user/product_details.html", context=context)
-    
+
+def register(request):
+    return render(request, "user/user_register.html")
