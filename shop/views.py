@@ -176,3 +176,13 @@ def brands(request):
     context['products'] = products
     context['title'] = f"Products from the brand {brand.name}"
     return render(request, "user/product_list.html", context=context)
+
+def product(request):
+    context=dict()
+    context['brands'] = Brand.objects.all()
+    context['categories']= Category.objects.all()
+    id = request.GET.get('id', None)
+    product = Product.objects.filter(id=id).first()
+    context['product'] = product
+    return render(request, "user/product_details.html", context=context)
+    

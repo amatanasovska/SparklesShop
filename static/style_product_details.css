@@ -1,0 +1,54 @@
+.btn_product_details_cart{
+    border-radius: 0px;
+    background-color: rgb(233,181,181);
+    width: auto;
+    font-size: 25px;
+    color: white;
+}
+/* Style the tab */
+.tab {
+    overflow: hidden;
+
+  }
+  
+  /* Style the buttons that are used to open the tab content */
+  .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    border-bottom: rgb(163, 163, 163) 3px solid;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 20px;
+  }
+  
+  /* Change background color of buttons on hover */
+  .tab button:hover {
+    
+    border-bottom: rgb(176, 92, 92) 3px solid;
+  }
+  
+  /* Create an active/current tablink class */
+  .tab button.active_prop {
+    border-bottom: rgb(241, 163, 163) 3px solid;
+  }
+  
+  /* Style the tab content */
+  .tabcontent {
+    display: none;
+    padding: 20px 12px 10px 10px;
+
+  }
+  .tabcontent {
+    animation: fadeEffect 1s; /* Fading effect takes 1 second */
+  }
+  
+  /* Go from zero to full opacity */
+  @keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
