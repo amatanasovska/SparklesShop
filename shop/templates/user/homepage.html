@@ -38,8 +38,11 @@
   
   <div class="d-flex flex-row justify-content-evenly align-items-center my-5">
     {% for product in latest_products %}
+    
   <div class="card_custom  p-5" style="width: 18rem;">
+    <a href="/product?id={{product.id}}">
       <img src="{{product.image.url}}" class="card-img-top" alt="..." style="height:200px">
+      </a>
       <div class="card-body">
         <h5 class="card-title">{{product.name}}</h5>
         <p class="card-text">{{product.price}}</p>

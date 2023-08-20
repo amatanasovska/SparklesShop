@@ -42,7 +42,17 @@
       
       <div id="Specification" class="tabcontent mx-5">
         <h3>Specification</h3>
-        <p class="my-3">Paris is the capital of France.</p>
+        {% for specification in specifications %}
+
+        <div class="row" style="border-bottom: 1px gray solid;">
+            <div class="col my-2">
+                {{specification.product_property.name}}
+            </div>
+            <div class="col my-2">
+                {{specification.value}}
+            </div>
+        </div>
+        {% endfor %}
       </div>
       <div id="Comments" class="tabcontent mx-5">
         <h3>Comments</h3>
@@ -50,7 +60,12 @@
       </div>
       <div id="Availability" class="tabcontent mx-5">
         <h3>Availability</h3>
-        <p class="my-3">Tokyo is the capital of Japan.</p>
+        {% for store in availability %}
+
+        <div class="row my-3 py-3" style="border-bottom: 1px gray solid;">
+            {{store.store.location}}
+        </div>
+        {% endfor %}
       </div>
 
 {% endblock %}

@@ -21,6 +21,8 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
+    path('add_specification', product_specification, name="add_specification_product"),
+    path('add_availability', product_availability, name="add_availability_product"),
     path('admin/', admin.site.urls),
     path('', homepage, name="homepage"),
     path('login/', user_login, name="login"),
@@ -46,5 +48,9 @@ urlpatterns = [
     path('delete_sc_product', delete_sc_product, name="delete_sc_product"),
     path('checkout', checkout, name="checkout"),
     path("payment_info", payment_info, name = "payment_info"),
-    path("order_details", order_details, name = "order_details")
+    path("order_details", order_details, name = "order_details"),
+    path("locator", locator, name = "locator"),
+    path("delete_spec", product_specification_delete, name="delete_spec"),
+    path("delete_availability", product_availability_delete, name="delete_availability"),
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -131,8 +131,13 @@ def product_details(request):
                                              "description" : product.description,
                                              "category" : product.category,
                                              "brand" : product.brand})
+    context["product"] = product
+    context["availability"] = Availability.objects.filter(product=product).all()
+    context["specifications"] = ProductPropertiesValue.objects.filter(product=product).all()
     
-    return render(request, "seller/add_product.html", context=context)
+    return render(request, "seller/edit_product.html", context=context)
+
+
 
 @login_required(login_url="/admin_login")
 @user_passes_test(is_seller)
@@ -151,6 +156,60 @@ def user_details(request):
 def admin_logout(request):
     logout(request)
     return render(request, "seller/logout.html")
+@login_required(login_url="/admin_login")
+@user_passes_test(is_seller)
+def product_specification(request):
+    id = request.GET.get('id', None)
+    if request.method == "POST":
+        form_data = ProductSpecificationForm(data=request.POST, files=request.FILES)
+        print(form_data.errors)
+        if form_data.is_valid():
+            product_spec = form_data.save(commit=False)
+            
+            product_spec.save()
+            return redirect("/product_details?id="+id)
+        
+    context = dict()
+    context['form'] = ProductSpecificationForm(initial={"product":Product.objects.filter(id=id).first()})
+
+    return render(request, "seller/product_specification.html", context=context)
+
+@login_required(login_url="/admin_login")
+@user_passes_test(is_seller)
+def product_availability(request):
+    id = request.GET.get('id', None)
+    if request.method == "POST":
+        form_data = AvailabilityForm(data=request.POST, files=request.FILES)
+        print(form_data.errors)
+        if form_data.is_valid():
+            product_av = form_data.save(commit=False)
+            
+            product_av.save()
+            return redirect("/product_details?id="+id)
+        
+    context = dict()
+    context['form'] = AvailabilityForm(initial={"product":Product.objects.filter(id=id).first()})
+
+    return render(request, "seller/product_availability.html", context=context)
+
+@login_required(login_url="/admin_login")
+@user_passes_test(is_seller)
+def product_specification_delete(request):
+    id = request.GET.get('id', None)
+    prod_spec = ProductPropertiesValue.objects.filter(id=id).first()
+    prod_spec.delete()
+        
+    return redirect("/product_details/?id="+str(prod_spec.product.id))
+
+@login_required(login_url="/admin_login")
+@user_passes_test(is_seller)
+def product_availability_delete(request):
+    id = request.GET.get('id', None)
+    prod_av = Availability.objects.filter(id=id).first()
+    prod_av.delete()
+        
+    return redirect("/product_details/?id="+str(prod_av.product.id))
+
 
 def signout(request):
     logout(request)
@@ -230,6 +289,8 @@ def product(request):
     id = request.GET.get('id', None)
     product = Product.objects.filter(id=id).first()
     context['product'] = product
+    context['availability'] = Availability.objects.filter(product = product).all()
+    context['specifications'] = ProductPropertiesValue.objects.filter(product=product).all()
     if not isinstance(request.user,AnonymousUser):
         context['shopping_cart_items'] = len(ShoppingCart.objects.filter(user__id=request.user.id).all())
     else:
@@ -458,3 +519,21 @@ def order_details(request):
     context['order'] = Order.objects.filter(id=id, paid=True).first()
     context['order_items'] = OrderItem.objects.filter(order = context["order"]).all()
     return render(request, "seller/order_details.html", context)   
+
+def locator(request):
+    context = dict()
+    context['brands'] = Brand.objects.all()
+    context['categories']= Category.objects.all()
+    if not isinstance(request.user,AnonymousUser):
+        context['shopping_cart_items'] = len(ShoppingCart.objects.filter(user__id=request.user.id).all())
+    else:
+        index = 0
+        while(True):
+            cookie = request.COOKIES.get('sc'+ str(index), -1)
+            
+            if cookie == -1:
+                break
+            index+=1
+        
+        context['shopping_cart_items'] = index
+    return render(request, "user/locator.html", context)  

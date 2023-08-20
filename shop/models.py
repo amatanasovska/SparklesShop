@@ -22,7 +22,8 @@ class Product(models.Model):
     description = models.TextField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, blank=True, null=True)
-    
+    def __str__(self) -> str:
+        return self.name
 class ShoppingCart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -51,7 +52,7 @@ class Order(models.Model):
     payment_option = models.ForeignKey(CreditCard, on_delete=models.CASCADE, blank=True, null=True)
     total = models.IntegerField()
     paid = models.BooleanField()
-    
+
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
@@ -59,11 +60,9 @@ class OrderItem(models.Model):
 
 
 class Store(models.Model):
-    location = models.CharField(max_length=20, choices=(('SK', 'Skopje'),
-                                                        ('BT', 'Bitola'),
-                                                        ('PR', 'Prilep'),
-                                                        ('VE', 'Veles'),
-                                                        ('SR', 'Strumica')))
+    location = models.CharField(max_length=20)
+    def __str__(self) -> str:
+        return self.location
 
 class Availability(models.Model):
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
@@ -71,7 +70,8 @@ class Availability(models.Model):
 
 class ProductProperty(models.Model):
     name = models.CharField(max_length=50)
-
+    def __str__(self) -> str:
+        return self.name
 class ProductPropertiesValue(models.Model):
    product_property = models.ForeignKey(ProductProperty, on_delete=models.CASCADE)
    product = models.ForeignKey(Product, on_delete=models.CASCADE)

@@ -58,3 +58,30 @@ class ShoppingCartAdmin(admin.ModelAdmin):
 admin.site.register(ShoppingCart, ShoppingCartAdmin)
 
 
+
+class ProductPropertyAdmin(admin.ModelAdmin):
+    fields = ('name',)
+
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+    # def has_view_permission(self, request, obj=None):
+    #     return request.user.is_superuser
+    
+admin.site.register(ProductProperty, ProductPropertyAdmin)
+
+
+class StoreAdmin(admin.ModelAdmin):
+    fields = ('location',)
+
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+    # def has_view_permission(self, request, obj=None):
+    #     return request.user.is_superuser
+    
+admin.site.register(Store, StoreAdmin)

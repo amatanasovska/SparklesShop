@@ -1,0 +1,22 @@
+{% extends "seller/seller_base.html" %}
+{% block content %}
+<div id="dashboard_body">
+    <h1 style="color: white;">Edit product</h1>
+    <div class="" id="add_product_form_container">
+        <form action="" method="POST" class="mb-4 px-3 py-3" enctype="multipart/form-data" style="font-weight:bold;color: white; height: 100%;">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary mx-3 px-4" id="submit_product_btn"
+            style="background-color: rgb(240, 130, 130);color: white;font-weight: bold; border: none;">Add specs</button>
+
+            <a class="btn btn-primary px-5" href="/products"
+            style="background-color: rgb(249, 226, 226);color: rgb(217, 145, 145);font-weight: bold; border: none;">
+                Cancel
+            </a>
+
+        </form>
+        
+    </div>
+    
+</div>
+{% endblock %}

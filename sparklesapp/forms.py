@@ -3,6 +3,23 @@ from shop.models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
+class ProductSpecificationForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ProductSpecificationForm, self).__init__(*args, **kwargs)
+        for field in self.visible_fields():
+            field.field.widget.attrs["class"] = "form-control"
+    class Meta:
+        model = ProductPropertiesValue
+        fields = "__all__"
+class AvailabilityForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(AvailabilityForm, self).__init__(*args, **kwargs)
+        for field in self.visible_fields():
+            field.field.widget.attrs["class"] = "form-control"
+    class Meta:
+        model = Availability
+        fields = "__all__"
+          
 class ProductForm(forms.ModelForm):
     # fields = ("name", "quantity", "price",
     #                "image", "description", "category")

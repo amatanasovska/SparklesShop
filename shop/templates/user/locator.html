@@ -1,0 +1,45 @@
+{% extends "user/user_base.html" %}
+{% load static %}
+{% block content %}
+<div class="m-5">
+<h1 class="my-3">Headquarters</h1>
+<div style="overflow:hidden;max-width:100%;width:100%;height:500px;">
+    <div id="g-mapdisplay" style="height:100%; width:100%;max-width:100%;">
+        <iframe style="height:100%;width:100%;border:0;" frameborder="0" 
+        src="https://www.google.com/maps/embed/v1/place?q=Partizanski+Odredi+87,+Boulevard+Partizanski+Odredi,+Skopje,+North+Macedonia&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8">
+        </iframe>
+    </div>
+    <a class="embed-map-html" href="https://www.bootstrapskins.com/themes" 
+    id="enable-map-data">premium bootstrap themes
+    </a>
+    <style>
+    #g-mapdisplay img.text-marker
+    {max-width:none!important;background:none!important;}
+    img{max-width:none}
+    </style>
+</div>
+
+
+<h1 class="my-5">Sparkles at Ilindenska 1</h1>
+<div style="overflow:hidden;max-width:100%;width:100%;height:500px;">
+<div id="g-mapdisplay" style="height:100%; width:100%;max-width:100%;">
+<iframe style="height:100%;width:100%;border:0;" frameborder="0" 
+src="https://www.google.com/maps/embed/v1/place?q=Ilindenska+1,+Skopje,+North+Macedonia+&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8">
+</iframe>
+</div>
+<a class="embed-map-html" 
+href="https://www.bootstrapskins.com/themes" id="enable-map-data">
+premium bootstrap themes</a><style>#g-mapdisplay
+ img.text-marker{max-width:none!important;background:none!important;}img{max-width:none}</style></div>
+</div>
+<div class="m-5">
+<h1 class="my-5">Sparkles at Jane Sandanski</h1>
+
+
+<div style="overflow:hidden;max-width:100%;width:100%;height:500px;">
+<div id="g-mapdisplay" style="height:100%; width:100%;max-width:100%;">
+<iframe style="height:100%;width:100%;border:0;" frameborder="0" 
+src="https://www.google.com/maps/embed/v1/place?q=Jane+Sandanski+123,+Skopje,+North+Macedonia+&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"></iframe></div><a class="embed-map-html" href="https://www.bootstrapskins.com/themes" id="enable-map-data">premium bootstrap themes</a><style>#g-mapdisplay img.text-marker
+{max-width:none!important;background:none!important;}img{max-width:none}</style></div>
+</div>
+{% endblock %}
