@@ -38,6 +38,7 @@ urlpatterns = [
     path('admin_logout/', admin_logout, name="admin_logout"),
     path('categories/', categories, name="categories"),
     path('brands/', brands, name="brands"),
-    path('product/', product, name="product")
+    path('product/', product, name="product"),
+    path('signout/', signout, name="signout")
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

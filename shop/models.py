@@ -3,9 +3,6 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-class ShoppingCart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
@@ -25,6 +22,11 @@ class Product(models.Model):
     description = models.TextField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, blank=True, null=True)
+    
+class ShoppingCart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

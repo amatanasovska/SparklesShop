@@ -5,8 +5,11 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from shop.models import *
+from django.contrib.auth.models import User, Group
+from django.contrib import messages
 
-from sparklesapp.forms import ProductForm
+
+from sparklesapp.forms import *
 
 # Group check 
 
@@ -38,6 +41,7 @@ def page_login(request):
                 if is_seller(user):
                     return HttpResponseRedirect('/dashboard')
                 elif is_buyer(user):
+                    print("BUYER")
                     return HttpResponseRedirect('/')
                 else:
                     raise Exception("No role assigned to user please assign seller or buyer role.")
@@ -146,6 +150,11 @@ def admin_logout(request):
     logout(request)
     return render(request, "seller/logout.html")
 
+def signout(request):
+    logout(request)
+    return redirect("/")
+
+
 def homepage(request):
     context = dict()
     context['brands'] = Brand.objects.all()
@@ -187,4 +196,23 @@ def product(request):
     return render(request, "user/product_details.html", context=context)
 
 def register(request):
-    return render(request, "user/user_register.html")
+    logout(request)
+    context = dict()
+    context['form'] = RegisterForm
+    if request.method == "POST":
+        form = RegisterForm(data=request.POST, files=request.FILES)
+        
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            user = authenticate(username=user.username, password=user.password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+            messages.success(request, "Registration successful." )
+            return redirect("/")
+        else:
+            messages.error(request, "Unsuccessful registration. Invalid information.")
+            context['error_msg'] = "Unsuccessful registration. Invalid information."
+    return render(request, "user/user_register.html", context)
+

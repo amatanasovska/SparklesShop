@@ -1,0 +1,36 @@
+{% extends "user/user_base_no_footer.html" %}
+{% block content %}
+<div id="login_body" class="h-100">
+    <nav class="navbar navbar-expand-lg navbar-light px-3 d-flex justify-content-center">
+        <a class="navbar-brand fw-bold" style="font-size: 35px; color: white;" href="/">Sparkles</a>
+    </nav>
+    <div style="width: 100%;" class="d-flex justify-content-center">
+      <div id="login" class="m-5 p-5">
+        <h5 class="text-center p-2">Register</h2>
+        <form action="" method="POST" class="mb-4 px-3" enctype="multipart/form-data" style="color: black;">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <!-- <button type="submit" class="btn btn-primary mx-3 px-4" id="submit_product_btn"
+            style="background-color: rgb(240, 130, 130);color: white;font-weight: bold; border: none;">Add product</button>
+            <a class="btn btn-primary px-5" href="/products"
+            style="background-color: rgb(249, 226, 226);color: rgb(217, 145, 145);font-weight: bold; border: none;">
+                Cancel
+            </a> -->
+            <div class="control-group">
+                <div class="controls m-3">
+                    <button type="submit" class="form-control btn" id="admin_login_btn">Register</button>
+                </div>
+            </div>
+            <div class="control-group">
+                <p style="color: red;">{{error_msg}}</p>
+            </div>
+            <div class="text-center">
+                <p>Already have an account? <a href="/login">Login</a></p>
+            </div>
+        </form>
+        
+        </div>
+    </div>
+    </div>
+
+{% endblock %}

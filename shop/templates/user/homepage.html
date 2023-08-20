@@ -51,6 +51,7 @@
 
   </div>
 </div>
+{% if  not user.is_authenticated %}        
 <div class="register_banner my-5" style="height: 20rem;">
   <div class="row h-100">
     <div class="col d-flex align-items-center justify-content-center">
@@ -61,7 +62,7 @@
     </div>
   </div>
 </div>
-
+{% endif %}
 
 
 
