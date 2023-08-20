@@ -291,8 +291,12 @@ def product(request):
     context['product'] = product
     context['availability'] = Availability.objects.filter(product = product).all()
     context['specifications'] = ProductPropertiesValue.objects.filter(product=product).all()
+    context['show_field'] = False
     if not isinstance(request.user,AnonymousUser):
         context['shopping_cart_items'] = len(ShoppingCart.objects.filter(user__id=request.user.id).all())
+        
+        if(len(Comment.objects.filter(user=request.user, product = product).all())==0):
+            context['show_field'] = True
     else:
         index = 0
         while(True):
@@ -301,7 +305,23 @@ def product(request):
                 break
             index+=1
         
+
         context['shopping_cart_items'] = index
+    context['form'] = CommentForm
+    comments = Comment.objects.filter( product = product).all()
+    context['comments'] = comments
+    
+    if request.method=="POST":
+        form = CommentForm(data=request.POST, files=request.FILES)
+        
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.product = product
+            comment.save()
+        return render(request, "user/product_details.html", context=context)
+    
+    
     return render(request, "user/product_details.html", context=context)
 
 def register(request):

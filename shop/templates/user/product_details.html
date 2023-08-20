@@ -56,7 +56,19 @@
       </div>
       <div id="Comments" class="tabcontent mx-5">
         <h3>Comments</h3>
-        <p class="my-3">Paris is the capital of France.</p>
+        {% if show_field and user.is_authenticated %}
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="form-control btn" id="admin_login_btn">Add comment</button>
+
+        </form>
+        {% endif %}
+        {% for comment in comments %}
+        <div class="row" style="border-bottom: 1px rgb(191, 157, 157) solid;">
+            <span style="font-weight: bold; color: rgb(181, 79, 79);">{{comment.user.username}}</span> - {{comment.content}}
+        </div>
+        {% endfor %}
       </div>
       <div id="Availability" class="tabcontent mx-5">
         <h3>Availability</h3>
