@@ -39,6 +39,7 @@ urlpatterns = [
     path('categories/', categories, name="categories"),
     path('brands/', brands, name="brands"),
     path('product/', product, name="product"),
-    path('signout/', signout, name="signout")
+    path('signout/', signout, name="signout"),
+    path('add_to_cart', add_to_cart, name="add_to_cart")
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

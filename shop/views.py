@@ -5,7 +5,7 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from shop.models import *
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, AnonymousUser
 from django.contrib import messages
 
 
@@ -161,6 +161,20 @@ def homepage(request):
     context['categories']= Category.objects.all()
     latest_products = Product.objects.all()
     context['latest_products'] =latest_products[len(latest_products)-3:]
+    if not isinstance(request.user,AnonymousUser):
+        context['shopping_cart_items'] = len(ShoppingCart.objects.filter(user__id=request.user.id).all())
+    else:
+        index = 0
+        while(True):
+            cookie = request.COOKIES.get('sc'+ str(index), -1)
+            
+            if cookie == -1:
+                break
+            index+=1
+        
+        context['shopping_cart_items'] = index
+
+        pass
     return render(request, "user/homepage.html", context=context)
 
 
@@ -173,6 +187,17 @@ def categories(request):
     products = Product.objects.filter(category__id=id).all()
     context['products'] = products
     context['title'] = f"Products from the category {category.name}"
+    if not isinstance(request.user,AnonymousUser):
+        context['shopping_cart_items'] = len(ShoppingCart.objects.filter(user__id=request.user.id).all())
+    else:
+        index = 0
+        while(True):
+            cookie = request.COOKIES.get('sc'+ str(index), -1)
+            if cookie == -1:
+                break
+            index+=1
+        
+        context['shopping_cart_items'] = index
     return render(request, "user/product_list.html", context=context)
 
 def brands(request):
@@ -184,6 +209,17 @@ def brands(request):
     products = Product.objects.filter(brand__id=id).all()
     context['products'] = products
     context['title'] = f"Products from the brand {brand.name}"
+    if not isinstance(request.user,AnonymousUser):
+        context['shopping_cart_items'] = len(ShoppingCart.objects.filter(user__id=request.user.id).all())
+    else:
+        index = 0
+        while(True):
+            cookie = request.COOKIES.get('sc'+ str(index), -1)
+            if cookie == -1:
+                break
+            index+=1
+        
+        context['shopping_cart_items'] = index
     return render(request, "user/product_list.html", context=context)
 
 def product(request):
@@ -193,6 +229,17 @@ def product(request):
     id = request.GET.get('id', None)
     product = Product.objects.filter(id=id).first()
     context['product'] = product
+    if not isinstance(request.user,AnonymousUser):
+        context['shopping_cart_items'] = len(ShoppingCart.objects.filter(user__id=request.user.id).all())
+    else:
+        index = 0
+        while(True):
+            cookie = request.COOKIES.get('sc'+ str(index), -1)
+            if cookie == -1:
+                break
+            index+=1
+        
+        context['shopping_cart_items'] = index
     return render(request, "user/product_details.html", context=context)
 
 def register(request):
@@ -215,4 +262,30 @@ def register(request):
             messages.error(request, "Unsuccessful registration. Invalid information.")
             context['error_msg'] = "Unsuccessful registration. Invalid information."
     return render(request, "user/user_register.html", context)
+
+def add_to_cart(request):
+    
+    id = request.GET.get('id', None)
+    qty = request.GET.get('qty', None)
+    if isinstance(request.user,AnonymousUser):
+        print("HERE")
+        index = 0
+        while(True):
+            cookie = request.COOKIES.get('sc'+ str(index), -1)
+            if cookie == -1:
+                break
+            index+=1
+        response = HttpResponse()
+        response.set_cookie('sc'+str(index), 1)
+        
+        response.set_cookie('sc'+str(index)+"_id", id)
+        
+        response.set_cookie('sc'+str(index)+"_qty", qty)
+    else:
+        shopping_cart_item = ShoppingCart(user = request.user,
+                                            product = Product.objects.filter(id=id).first(),
+                                            quantity=qty)
+        shopping_cart_item.save()
+    
+    return response
 
