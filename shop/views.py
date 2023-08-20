@@ -75,7 +75,7 @@ def manage_products(request):
 @user_passes_test(is_seller)
 def manage_orders(request):
     context= dict()
-    context["orders"] = Order.objects.all()
+    context["orders"] = Order.objects.filter(paid=True).all()
     return render(request, "seller/orders_management.html", context=context)
 
 @login_required(login_url="/admin_login")
@@ -143,7 +143,7 @@ def user_details(request):
     context = dict()
     
     context["user"] = user
-    
+    context["orders"] = Order.objects.filter(user = user, paid=True).all()
     return render(request, "seller/user_details.html", context=context)
 
 @login_required(login_url="/admin_login")
@@ -373,6 +373,8 @@ def checkout(request):
         
         if form_data.is_valid():
             order = form_data.save(commit=False)
+            order.total = 0
+            order.paid = False
             if isinstance(request.user,AnonymousUser):
                 guest_user = User.objects.filter(username="GuestUser").first()
                 order.user = guest_user
@@ -386,35 +388,36 @@ def checkout(request):
     return render(request, "user/order_info.html",context= context)
 def add_order_items_cookie(orderId, request):
     index = 0
+    total = 0
     order_items = []
     while(True):
         cookie = request.COOKIES.get('sc'+ str(index), -1)
         
         if cookie == -1:
             break
-        print(Order.objects.filter(id=orderId).first())
         order_item = OrderItem(product = Product.objects.filter(id=request.COOKIES.get('sc'+ str(index) + "_id", -1)).first(),
                                quantity = request.COOKIES.get('sc'+ str(index)+"_qty", -1),
                                order = Order.objects.filter(id=orderId).first())
-        
-
+        total += order_item.product.price * order_item.quantity
         order_item.save()
         order_items.append(order_item)
         index+=1
-    return order_items
+    return total,order_items
 def add_order_items_db(orderId, user):
     index = 0
+    total = 0
     order_items = []
     sc_items = ShoppingCart.objects.filter(user_id=user.id).all()
     for item in sc_items:
         order_item = OrderItem(product = Product.objects.filter(id=item.product.id).first(),
                                quantity = item.quantity,
                                order = Order.objects.filter(id=orderId).first())
-        
+        total += order_item.product.price * order_item.quantity
+
         order_item.save()
         order_items.append(order_item)
         index+=1
-    return order_items
+    return total,order_items
 def payment_info(request):
     context = dict()
     
@@ -425,16 +428,20 @@ def payment_info(request):
         if form_data.is_valid():
             creditcard = form_data.save(commit=False)
             order_items = []
+            total=0
             if isinstance(request.user,AnonymousUser):
                 guest_user = User.objects.filter(username="GuestUser").first()
                 # credi.user = guest_user
                 order.user = guest_user
 
-                order_items =add_order_items_cookie(id, request)    
+                total,order_items =add_order_items_cookie(id, request)    
             else:
                 creditcard.user = request.user
-                order_items = add_order_items_db(id, request.user)
+                total,order_items = add_order_items_db(id, request.user)
                 order.user = request.user
+            order.total = total
+            order.paid = True
+            order.save()
             context['order_items'] = order_items
             return render(request, "user/payment_succesful.html", context)
         else:
@@ -442,3 +449,12 @@ def payment_info(request):
     context['form'] = PaymentForm
 
     return render(request, "user/payment_form.html", context)
+
+@login_required(login_url="/admin_login")
+@user_passes_test(is_seller)
+def order_details(request):
+    id = request.GET.get('id', None)
+    context = dict()
+    context['order'] = Order.objects.filter(id=id, paid=True).first()
+    context['order_items'] = OrderItem.objects.filter(order = context["order"]).all()
+    return render(request, "seller/order_details.html", context)   

@@ -1,0 +1,25 @@
+{% extends "seller/seller_base.html" %}
+{% block content %}
+<div id="dashboard_body">
+    <div  class="container py-5">
+    <h3 style="color: white;"> By user: {{order.user}}  - 
+        <a style="text-decoration: underline;" href="/user_details/?id={{order.user.id}}">
+        See user details
+        </a>
+    </h3>
+    <div class="my-5">
+    <h4 style="color: rgb(180, 84, 84);">Order Items:</h4>
+    {% for item in order_items %}
+        <div style="border-bottom: solid 1px rgb(212, 157, 157); color: white;">
+            {{item.product.name}} - Quantity: {{item.quantity}} Price: {{item.product.price}} - 
+            <a style="text-decoration: underline;" href="/product_details/?id={{item.product.id}}">
+                Go to product details page
+            </a> 
+        </div>
+
+    {% endfor %}
+    </div>
+    <h6 class="fw-bold" style="color: rgb(180, 84, 84);">Order total: <span style="color: brown;">{{order.total}}$</span></h6>
+    </div>
+</div>
+{% endblock %}

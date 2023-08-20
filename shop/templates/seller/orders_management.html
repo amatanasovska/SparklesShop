@@ -20,7 +20,7 @@
         <div class="row table_rows">
             <div class="col-md-3">{{order.id}}</div>
             <div class="col-md-6">{{order.user.username}}</div>
-            <div class="col-md-3">See more</div>
+            <div class="col-md-3"><a href="/order_details?id={{order.id}}">See more</a></div>
         </div>
         {% endfor %}
         

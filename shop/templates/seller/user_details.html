@@ -2,8 +2,14 @@
 {% block content %}
 <div id="dashboard_body">
     <div  class="container py-5">
-    <h3 style="color: white;"> {{user.username}}</h3>
+    <h3 style="color: white;"> User: {{user.username}}</h3>
+    <h4 style="color: rgb(180, 84, 84);">Orders:</h4>
+    {% for order in orders %}
+        <div style="border-bottom: solid 1px rgb(212, 157, 157); color: white;">
+            <a style="text-decoration: underline;" href="/order_details?id={{order.id}}">See order #{{order.id}}</a> Total: {{order.total}}
+        </div>
 
+    {% endfor %}
     </div>
 </div>
 {% endblock %}

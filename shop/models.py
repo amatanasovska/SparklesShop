@@ -49,7 +49,9 @@ class Order(models.Model):
     postal_code = models.IntegerField()
     email = models.EmailField()
     payment_option = models.ForeignKey(CreditCard, on_delete=models.CASCADE, blank=True, null=True)
-
+    total = models.IntegerField()
+    paid = models.BooleanField()
+    
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
