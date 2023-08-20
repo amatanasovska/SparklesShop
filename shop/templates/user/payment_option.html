@@ -1,0 +1,42 @@
+{% extends "user/user_base_only_logo.html" %}
+{% load static %}
+{% block content %}
+<div class="h-100 body_pink">
+
+    <div style="width: 100%;" class="d-flex justify-content-center">
+      <div class="m-5 p-5 w-25 middle_div">
+        <h5 class="text-center p-2">Choose payment option</h2>
+        <form action="" method="POST" class="mb-4 px-3" enctype="multipart/form-data" style="color: black;">
+            <p>Choose payment option</p>
+            {% if user.is_authenticated %}   
+            {% for po in payment_options %}
+                <a>
+                    <div style="background-color: rgb(238, 213, 213);">
+                        <p>{{po.full_name}}</p>
+                        <p>************</p>
+                        <p>{{po.expires_on}}</p>
+                    </div>
+                </a>
+            {% endfor %}
+            {% endif %}
+            {% if  not user.is_authenticated %}   
+                <p class="text-center"><a href="/login" style="text-decoration: underline;">Sign in</a> to save payment options</p>
+            {% endif %}
+            <div class="text-center">
+                <a  href="/payment_info?id={{order.id}}" style="color: lightcoral"> + Add payment option</a>
+            </div>
+            <div class="control-group">
+                <div class="controls m-3">
+                    <button type="submit" class="form-control btn" id="admin_login_btn">Continue</button>
+                </div>
+            </div>
+            <div class="control-group">
+                <p style="color: red;">{{error_msg}}</p>
+            </div>
+
+        </form>
+        
+        </div>
+    </div>
+    </div>
+{% endblock %}

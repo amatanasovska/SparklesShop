@@ -1,0 +1,19 @@
+.proceed_btn
+{
+    border-radius: 0;
+    height: 40px;
+    color: white;
+    background-color: rgb(238, 198, 198) ;
+}
+.body_pink
+{
+    background-color: rgb(240, 185, 185);
+    width: 100%;
+    height:100%;
+}
+.middle_div
+{
+    background-color: rgba(255, 255, 255, 0.59);
+    border-radius: 10px;
+    
+}

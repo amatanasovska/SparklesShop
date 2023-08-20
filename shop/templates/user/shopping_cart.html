@@ -24,16 +24,21 @@
                         </a>
                     </div>
                   </div>
-                    <p class="card-text my-5">{{sc.product.price}}$</p>
+                    <p class="card-text my-5"><span id="{{forloop.counter0}}_price">{{sc.product.price}}</span>$</p>
                     
-                    <span>Quantity: </span><input onchange="updateValue(event, '{{sc.id}}')" value="{{sc.quantity}}" type="number" class="form-control w-25" style="display: inline-block;"/>
+                    <span>Quantity: </span><input id="{{forloop.counter0}}_qty" min="1" max="{{sc.product.quantity}}" onchange="updateValue(event, '{{sc.id}}')" value="{{sc.quantity}}" type="number" class="form-control w-25" style="display: inline-block;"/>
                 </div>
             </div>
             
           </div>
     {% endfor %}
-
+    <div class="mx-5">
+        <h3>Total: <span id="total_price">{{total_price}}</span>$</h3>
+    </div>
 </div>
 
+<div class="d-flex flex-row justify-content-end mx-5 w-75">
+    <a class="btn proceed_btn" href="/checkout">Proceed</a>
+</div>
 
 {% endblock %}

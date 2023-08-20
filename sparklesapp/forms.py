@@ -1,5 +1,5 @@
 from django import forms
-from shop.models import Product
+from shop.models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
@@ -43,3 +43,30 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ("username", "email", "password1", "password2")
+
+class OrderForm(forms.ModelForm):
+    # fields = ("name", "quantity", "price",
+    #                "image", "description", "category")
+    def __init__(self, *args, **kwargs):
+        super(OrderForm, self).__init__(*args, **kwargs)
+        for field in self.visible_fields():
+            field.field.widget.attrs["class"] = "form-control"
+    class Meta:
+        model = Order
+        exclude = ("user","payment_option")
+        
+
+class PaymentForm(forms.ModelForm):
+    # fields = ("name", "quantity", "price",
+    #                "image", "description", "category")
+    def __init__(self, *args, **kwargs):
+        super(PaymentForm, self).__init__(*args, **kwargs)
+        for field in self.visible_fields():
+            field.field.widget.attrs["class"] = "form-control"
+    class Meta:
+        model = CreditCard
+        widgets= {
+        'expires_on': forms.DateInput(attrs={'type': 'date'}) 
+        }
+        exclude = ("user",)
+        

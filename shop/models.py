@@ -33,11 +33,24 @@ class Comment(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     content = models.CharField(max_length=255)
 
+class CreditCard(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=255)
+    number = models.CharField(max_length=16)
+    ccv = models.CharField(max_length=4)
+    expires_on = models.DateField()
+
 class Order(models.Model):
-    pass
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    surname = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
+    postal_code = models.IntegerField()
+    email = models.EmailField()
+    payment_option = models.ForeignKey(CreditCard, on_delete=models.CASCADE, blank=True, null=True)
 
 class OrderItem(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     order = models.ForeignKey(Order, on_delete=models.CASCADE)

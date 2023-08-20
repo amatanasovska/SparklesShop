@@ -6,8 +6,11 @@ function addToCart(qty, id) {
     console.log(number)
     shopping_cart_items_number.innerHTML = number
 
-    qty=1
-
+    if(qty==-1)
+    {
+        qty = document.getElementById("product_qty").value;
+    }
+    
     const xhttp = new XMLHttpRequest();
     xhttp.open("GET", "/add_to_cart?id=" + id + "&qty=" + qty);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

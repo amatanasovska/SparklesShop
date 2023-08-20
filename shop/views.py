@@ -8,6 +8,7 @@ from shop.models import *
 from django.contrib.auth.models import User, Group, AnonymousUser
 from django.contrib import messages
 import re
+from django.template import loader
 
 from sparklesapp.forms import *
 
@@ -45,7 +46,8 @@ def page_login(request):
                     return HttpResponseRedirect('/')
                 else:
                     raise Exception("No role assigned to user please assign seller or buyer role.")
-    
+        else:
+            return render(request, "user/user_login.html", {'error_msg': "Invalid username or password"})
 
 
 
@@ -293,16 +295,6 @@ def update_shopping_cart(request):
     qty = request.GET.get('qty', None)
     response = HttpResponse()
     if isinstance(request.user,AnonymousUser):
-        # print("HERE")
-        # index = 0
-        # while(True):
-        #     cookie = request.COOKIES.get('sc'+ str(index), -1)
-        #     if cookie == -1:
-        #         break
-        #     index+=1
-        # response = HttpResponse()
-        # response.set_cookie('sc'+str(index), 1)
-        
         response.set_cookie('sc'+str(id)+"_qty", qty)
     else:
 
@@ -334,6 +326,7 @@ def shopping_cart(request):
         scitems = ShoppingCart.objects.filter(user_id = request.user.id)
 
     context['products'] = scitems
+    context['total_price'] = sum([int(item.product.price)*int(item.quantity) for item in scitems])
     if not isinstance(request.user,AnonymousUser):
         context['shopping_cart_items'] = len(ShoppingCart.objects.filter(user__id=request.user.id).all())
     else:
@@ -371,3 +364,81 @@ def delete_sc_product(request):
         scitem.delete()
 
     return response
+
+def checkout(request):
+    context = dict()
+    context['form'] = OrderForm
+    if request.method == "POST":
+        form_data = OrderForm(data=request.POST, files=request.FILES)
+        
+        if form_data.is_valid():
+            order = form_data.save(commit=False)
+            if isinstance(request.user,AnonymousUser):
+                guest_user = User.objects.filter(username="GuestUser").first()
+                order.user = guest_user
+            else:
+                order.user = request.user
+                context['payment_options'] = CreditCard.objects.filter(user=request.user).all()
+            order.save()
+            context['order'] = order
+
+            return render(request, "user/payment_option.html", context)
+    return render(request, "user/order_info.html",context= context)
+def add_order_items_cookie(orderId, request):
+    index = 0
+    order_items = []
+    while(True):
+        cookie = request.COOKIES.get('sc'+ str(index), -1)
+        
+        if cookie == -1:
+            break
+        print(Order.objects.filter(id=orderId).first())
+        order_item = OrderItem(product = Product.objects.filter(id=request.COOKIES.get('sc'+ str(index) + "_id", -1)).first(),
+                               quantity = request.COOKIES.get('sc'+ str(index)+"_qty", -1),
+                               order = Order.objects.filter(id=orderId).first())
+        
+
+        order_item.save()
+        order_items.append(order_item)
+        index+=1
+    return order_items
+def add_order_items_db(orderId, user):
+    index = 0
+    order_items = []
+    sc_items = ShoppingCart.objects.filter(user_id=user.id).all()
+    for item in sc_items:
+        order_item = OrderItem(product = Product.objects.filter(id=item.product.id).first(),
+                               quantity = item.quantity,
+                               order = Order.objects.filter(id=orderId).first())
+        
+        order_item.save()
+        order_items.append(order_item)
+        index+=1
+    return order_items
+def payment_info(request):
+    context = dict()
+    
+    if request.method=="POST":
+        form_data = PaymentForm(data=request.POST, files=request.FILES)
+        id = request.GET.get('id', None)
+        order = Order.objects.filter(id=id).first()
+        if form_data.is_valid():
+            creditcard = form_data.save(commit=False)
+            order_items = []
+            if isinstance(request.user,AnonymousUser):
+                guest_user = User.objects.filter(username="GuestUser").first()
+                # credi.user = guest_user
+                order.user = guest_user
+
+                order_items =add_order_items_cookie(id, request)    
+            else:
+                creditcard.user = request.user
+                order_items = add_order_items_db(id, request.user)
+                order.user = request.user
+            context['order_items'] = order_items
+            return render(request, "user/payment_succesful.html", context)
+        else:
+            context['error_msg'] = "Invalid information"
+    context['form'] = PaymentForm
+
+    return render(request, "user/payment_form.html", context)

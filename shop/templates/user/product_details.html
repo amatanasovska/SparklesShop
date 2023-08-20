@@ -14,7 +14,7 @@
             <div class="my-3">
             <h4>{{product.price}}$</h4>
             </div>
-            <h5 style="display: inline-block" class="w-25">Quantity:</h5> <input style="display: inline-block" class="w-25" type="number">
+            <h5 style="display: inline-block" class="w-25">Quantity:</h5> <input min="1" max="{{product.quantity}}" id="product_qty" style="display: inline-block" class="w-25" type="number">
         </div>
         <div class="row my-5 py-5">
             <a onclick="addToCart(-1,'{{product.id}}')" class="btn add_cart_btn btn_product_details_cart my-5">Add to cart</a>
