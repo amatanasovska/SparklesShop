@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import user_passes_test
 from shop.models import *
 from django.contrib.auth.models import User, Group, AnonymousUser
 from django.contrib import messages
-
+import re
 
 from sparklesapp.forms import *
 
@@ -174,7 +174,6 @@ def homepage(request):
         
         context['shopping_cart_items'] = index
 
-        pass
     return render(request, "user/homepage.html", context=context)
 
 
@@ -288,4 +287,87 @@ def add_to_cart(request):
         shopping_cart_item.save()
     
     return response
+def update_shopping_cart(request):
+    
+    id = request.GET.get('id', None)
+    qty = request.GET.get('qty', None)
+    response = HttpResponse()
+    if isinstance(request.user,AnonymousUser):
+        # print("HERE")
+        # index = 0
+        # while(True):
+        #     cookie = request.COOKIES.get('sc'+ str(index), -1)
+        #     if cookie == -1:
+        #         break
+        #     index+=1
+        # response = HttpResponse()
+        # response.set_cookie('sc'+str(index), 1)
+        
+        response.set_cookie('sc'+str(id)+"_qty", qty)
+    else:
 
+        shopping_cart_item = ShoppingCart.objects.filter(id=id).first()
+        shopping_cart_item.quantity = qty
+        shopping_cart_item.save()
+    
+    return response
+def shopping_cart(request):
+    context=dict()
+    context['brands'] = Brand.objects.all()
+    context['categories']= Category.objects.all()
+    scitems = []
+    if isinstance(request.user, AnonymousUser):
+        index = 0
+        while(True):
+            cookie = request.COOKIES.get('sc'+ str(index), -1)
+            cookie_id = request.COOKIES.get('sc'+ str(index)+"_id", -1)
+            
+            cookie_qty = request.COOKIES.get('sc'+ str(index)+"_qty", -1)
+            
+            
+            if cookie == -1:
+                break
+            scitems.append(ShoppingCart(id=index, product = Product.objects.filter(id=cookie_id).first(),
+                                         quantity=cookie_qty))
+            index+=1
+    else:
+        scitems = ShoppingCart.objects.filter(user_id = request.user.id)
+
+    context['products'] = scitems
+    if not isinstance(request.user,AnonymousUser):
+        context['shopping_cart_items'] = len(ShoppingCart.objects.filter(user__id=request.user.id).all())
+    else:
+        index = 0
+        while(True):
+            cookie = request.COOKIES.get('sc'+ str(index), -1)
+            if cookie == -1:
+                break
+            index+=1
+    
+        context['shopping_cart_items'] = index
+        
+    return render(request, "user/shopping_cart.html", context)
+
+def delete_sc_product(request):
+    id = request.GET.get('id', None)
+    response = HttpResponse()
+    if isinstance(request.user,AnonymousUser):
+        print(id)
+        index = int(id)
+        while(True):
+            cookie_val = request.COOKIES.get('sc'+ str(index+1), -1)
+            if cookie_val == -1:
+                break
+            response.set_cookie('sc'+str(index), cookie_val)
+            response.set_cookie('sc'+str(index)+"_id", request.COOKIES.get('sc'+ str(index+1) +"_id"))         
+            response.set_cookie('sc'+str(index)+"_qty", request.COOKIES.get('sc'+ str(index+1) + "_qty"))
+            index+=1
+
+        response.delete_cookie('sc'+str(index))
+        response.delete_cookie('sc'+str(index)+"_id")
+        response.delete_cookie('sc'+str(index)+"_qty")
+    else:
+        scitem = ShoppingCart.objects.filter(id=id)
+        scitem.delete()
+
+    return response

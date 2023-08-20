@@ -1,0 +1,39 @@
+{% extends "user/user_base.html" %}
+{% load static %}
+{% block content %}
+
+<h1 class="m-5">Shopping cart</h1>
+
+<div class="w-100">
+    {% for sc in products %}
+        <div class="row card_custom p-5 m-5 w-75">
+            <div class="col-md-3">
+                <a href="/product?id={{sc.product.id}}">
+                    <img src="{{sc.product.image.url}}" class="card-img-top" alt="..." style="height:200px">
+                </a>
+            </div>
+            <div class="col-md-9">
+                <div class="card-body">
+                    <div class="row">
+                    <div class="col-md-9">
+                        <h5 class="card-title">{{sc.product.name}}</h5>
+                    </div>
+                    <div class="col">
+                        <a href="" onclick="delete_sc_product('{{sc.id}}')">
+                            <h6>X</h6>
+                        </a>
+                    </div>
+                  </div>
+                    <p class="card-text my-5">{{sc.product.price}}$</p>
+                    
+                    <span>Quantity: </span><input onchange="updateValue(event, '{{sc.id}}')" value="{{sc.quantity}}" type="number" class="form-control w-25" style="display: inline-block;"/>
+                </div>
+            </div>
+            
+          </div>
+    {% endfor %}
+
+</div>
+
+
+{% endblock %}
