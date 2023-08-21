@@ -2,18 +2,7 @@
 {% block content %}
 <div id="dashboard_body"  style="height: 100%;">
     <div class="row mx-5 py-5">
-        <div class="col"><h2 style="color: rgb(151, 97, 97);">Product list</h2></div>
-        <div class="col mx-5">
-            <div class="d-flex form-inputs">
-            <form action="/search_products" class="w-100" method="GET">
-                <input class="form-control" type="text" name="q" placeholder="Search any product...">
-            </form>
-
-            <i class="bx bx-search"></i>
-            </div>
-        </div>
-        <div class="col"><a href="/add_product"><button id="add_product_btn" class="form-control btn">Add product</button></a></div>
-
+        <div class="col"><h2 style="color: rgb(151, 97, 97);">Product search results</h2></div>
     </div>
     <div class="container">
         <div class="row" id="table_header">

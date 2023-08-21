@@ -7,6 +7,9 @@
         See user details
         </a>
     </h3>
+    <h6 style="color: white;">{{order.name}} {{order.surname}}</h6>
+    <p style="color: white;">{{order.address}} - {{order.postal_code}}, {{order.city}}</p>
+    <p style="color: white;">Contact: {{order.email}}</p>
     <div class="my-5">
     <h4 style="color: rgb(180, 84, 84);">Order Items:</h4>
     {% for item in order_items %}

@@ -52,5 +52,9 @@ urlpatterns = [
     path("locator", locator, name = "locator"),
     path("delete_spec", product_specification_delete, name="delete_spec"),
     path("delete_availability", product_availability_delete, name="delete_availability"),
-    path("search", search_products, name="search" )
+    path("search", search_products, name="search" ),
+    path("search_products", search_products_admin, name="search_products" ),
+    path("search_orders", search_orders, name="search_orders"),
+    path("search_users", search_users, name="search_users")
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

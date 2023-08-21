@@ -579,3 +579,35 @@ def search_products(request):
         
         context['shopping_cart_items'] = index
     return render(request, "user/product_list.html", context=context)
+
+@login_required(login_url="/admin_login")
+@user_passes_test(is_seller)
+def search_products_admin(request):
+    context = dict()
+    q = request.GET.get('q', None)
+    products = Product.objects.filter(Q(name__contains=q) | Q(description__contains=q)).all()
+    context['products'] = products
+    return render(request, "seller/search_results_products.html", context)   
+
+@login_required(login_url="/admin_login")
+@user_passes_test(is_seller)
+def search_orders(request):
+    context = dict()
+    q = request.GET.get('q', None)
+    orders = Order.objects.filter((Q(name__contains=q) | Q(user__username__contains=q) | 
+                                  Q(surname__contains=q) | Q(address__contains=q) |
+                                  Q(city__contains=q)) & Q(paid=True)).all()
+    context['orders'] = orders
+    return render(request, "seller/search_results_orders.html", context)   
+
+
+
+@login_required(login_url="/admin_login")
+@user_passes_test(is_seller)
+def search_users(request):
+    context = dict()
+    q = request.GET.get('q', None)
+    users = User.objects.filter(Q(username__contains=q)).all()
+    context['users'] = users
+    return render(request, "seller/search_results_users.html", context)   
+
