@@ -1,3 +1,4 @@
+import datetime
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login, logout
 from django.http import *
@@ -53,19 +54,19 @@ def page_login(request):
 
 
 @login_required(login_url="/admin_login")
-@user_passes_test(is_seller)
+@user_passes_test(is_seller, login_url="/admin_login")
 def dashboard(request):
     return render(request, "seller/dashboard.html")
 
 @login_required(login_url="/admin_login")
-@user_passes_test(is_seller)
+@user_passes_test(is_seller, login_url="/admin_login")
 def manage_users(request):
     context= dict()
     context["users"] = User.objects.all()
     return render(request, "seller/users_management.html", context=context)
 
 @login_required(login_url="/admin_login")
-@user_passes_test(is_seller)
+@user_passes_test(is_seller, login_url="/admin_login")
 def manage_products(request):
     context= dict()
     context["products"] = Product.objects.all()
@@ -73,14 +74,14 @@ def manage_products(request):
     return render(request, "seller/products_management.html", context=context)
 
 @login_required(login_url="/admin_login")
-@user_passes_test(is_seller)
+@user_passes_test(is_seller, login_url="/admin_login")
 def manage_orders(request):
     context= dict()
     context["orders"] = Order.objects.filter(paid=True).all()
     return render(request, "seller/orders_management.html", context=context)
 
 @login_required(login_url="/admin_login")
-@user_passes_test(is_seller)
+@user_passes_test(is_seller, login_url="/admin_login")
 def add_product(request):
     if request.method == "POST":
         form_data = ProductForm(data=request.POST, files=request.FILES)
@@ -95,7 +96,7 @@ def add_product(request):
     return render(request, "seller/add_product.html", context=context)
 
 @login_required(login_url="/admin_login")
-@user_passes_test(is_seller)
+@user_passes_test(is_seller, login_url="/admin_login")
 def product_details(request):
     print("ITS ANYKIND METHOD")
     id = request.GET.get('id', None)
@@ -141,7 +142,7 @@ def product_details(request):
 
 
 @login_required(login_url="/admin_login")
-@user_passes_test(is_seller)
+@user_passes_test(is_seller, login_url="/admin_login")
 def user_details(request):
     id = request.GET.get('id', None)
 
@@ -153,12 +154,12 @@ def user_details(request):
     return render(request, "seller/user_details.html", context=context)
 
 @login_required(login_url="/admin_login")
-@user_passes_test(is_seller)
+@user_passes_test(is_seller, login_url="/admin_login")
 def admin_logout(request):
     logout(request)
     return render(request, "seller/logout.html")
 @login_required(login_url="/admin_login")
-@user_passes_test(is_seller)
+@user_passes_test(is_seller, login_url="/admin_login")
 def product_specification(request):
     id = request.GET.get('id', None)
     if request.method == "POST":
@@ -176,7 +177,7 @@ def product_specification(request):
     return render(request, "seller/product_specification.html", context=context)
 
 @login_required(login_url="/admin_login")
-@user_passes_test(is_seller)
+@user_passes_test(is_seller, login_url="/admin_login")
 def product_availability(request):
     id = request.GET.get('id', None)
     if request.method == "POST":
@@ -194,7 +195,7 @@ def product_availability(request):
     return render(request, "seller/product_availability.html", context=context)
 
 @login_required(login_url="/admin_login")
-@user_passes_test(is_seller)
+@user_passes_test(is_seller, login_url="/admin_login")
 def product_specification_delete(request):
     id = request.GET.get('id', None)
     prod_spec = ProductPropertiesValue.objects.filter(id=id).first()
@@ -203,7 +204,7 @@ def product_specification_delete(request):
     return redirect("/product_details/?id="+str(prod_spec.product.id))
 
 @login_required(login_url="/admin_login")
-@user_passes_test(is_seller)
+@user_passes_test(is_seller, login_url="/admin_login")
 def product_availability_delete(request):
     id = request.GET.get('id', None)
     prod_av = Availability.objects.filter(id=id).first()
@@ -328,13 +329,15 @@ def product(request):
 def register(request):
     logout(request)
     context = dict()
-    context['form'] = RegisterForm
+    
     if request.method == "POST":
         form = RegisterForm(data=request.POST, files=request.FILES)
-        
+        context['form'] = form
         if form.is_valid():
             user = form.save()
             login(request, user)
+            group = Group.objects.filter(name='Buyer').first()
+            group.user_set.add(user)
             user = authenticate(username=user.username, password=user.password)
             if user is not None:
                 if user.is_active:
@@ -344,6 +347,9 @@ def register(request):
         else:
             messages.error(request, "Unsuccessful registration. Invalid information.")
             context['error_msg'] = "Unsuccessful registration. Invalid information."
+    else:
+        context['form'] = RegisterForm
+
     return render(request, "user/user_register.html", context)
 
 def add_to_cart(request):
@@ -468,6 +474,47 @@ def checkout(request):
 
             return render(request, "user/payment_option.html", context)
     return render(request, "user/order_info.html",context= context)
+
+def pay_with_existing_card(request):
+    context = dict()
+    id = request.GET.get('id', None)
+    order = Order.objects.filter(id=id).first()
+    credit_card_id = request.GET.get('creditCardId', None)
+    creditcard = CreditCard.objects.filter(id=credit_card_id).first()
+    
+    order_items = []
+    total=0
+    if isinstance(request.user,AnonymousUser):
+        guest_user = User.objects.filter(username="GuestUser").first()
+        # credi.user = guest_user
+        order.user = guest_user
+
+        total,order_items =add_order_items_cookie(id, request)    
+    else:
+        total,order_items = add_order_items_db(id, request.user)
+        order.user = request.user
+        order.payment_option = creditcard
+        shopping_cart_items = ShoppingCart.objects.filter(user=request.user).all()
+        [item.delete() for item in shopping_cart_items]
+        
+    order.total = total
+    order.paid = True
+    order.save()
+    context['order_items'] = order_items
+    response = render(request, "user/payment_succesful.html", context)
+    if isinstance(request.user,AnonymousUser):
+        index = 0
+        while(True):
+            cookie_val = request.COOKIES.get('sc'+ str(index), -1)
+            if cookie_val == -1:
+                break
+            response.delete_cookie('sc'+str(index))
+            response.delete_cookie('sc'+str(index)+"_id")
+            response.delete_cookie('sc'+str(index)+"_qty")
+            index+=1
+
+    return response
+
 def add_order_items_cookie(orderId, request):
     index = 0
     total = 0
@@ -478,7 +525,7 @@ def add_order_items_cookie(orderId, request):
         if cookie == -1:
             break
         order_item = OrderItem(product = Product.objects.filter(id=request.COOKIES.get('sc'+ str(index) + "_id", -1)).first(),
-                               quantity = request.COOKIES.get('sc'+ str(index)+"_qty", -1),
+                               quantity = int(request.COOKIES.get('sc'+ str(index)+"_qty", -1)),
                                order = Order.objects.filter(id=orderId).first())
         total += order_item.product.price * order_item.quantity
         order_item.save()
@@ -509,6 +556,17 @@ def payment_info(request):
         order = Order.objects.filter(id=id).first()
         if form_data.is_valid():
             creditcard = form_data.save(commit=False)
+            if creditcard.expires_on <datetime.date.today() or len(creditcard.number)!=16 \
+                or len(creditcard.ccv)!=4 or not creditcard.number.isnumeric() or not creditcard.ccv.isnumeric():
+                
+                if creditcard.expires_on <datetime.date.today():
+                    context['error_msg'] = 'Expired card'
+                elif len(creditcard.number)!=16 or not creditcard.number.isnumeric():
+                    context['error_msg'] = 'Invalid credit card number'
+                elif len(creditcard.ccv)!=4 or not creditcard.ccv.isnumeric():
+                    context['error_msg'] = 'Invalid credit card CCV'
+                context['form'] = PaymentForm
+                return render(request, "user/payment_form.html", context)
             order_items = []
             total=0
             if isinstance(request.user,AnonymousUser):
@@ -521,11 +579,27 @@ def payment_info(request):
                 creditcard.user = request.user
                 total,order_items = add_order_items_db(id, request.user)
                 order.user = request.user
+                shopping_cart_items = ShoppingCart.objects.filter(user=request.user).all()
+                [item.delete() for item in shopping_cart_items]
+                creditcard.save()
+                order.payment_option = creditcard
             order.total = total
             order.paid = True
             order.save()
             context['order_items'] = order_items
-            return render(request, "user/payment_succesful.html", context)
+            response = render(request, "user/payment_succesful.html", context)
+            if isinstance(request.user,AnonymousUser):
+                index = 0
+                while(True):
+                    cookie_val = request.COOKIES.get('sc'+ str(index), -1)
+                    if cookie_val == -1:
+                        break
+                    response.delete_cookie('sc'+str(index))
+                    response.delete_cookie('sc'+str(index)+"_id")
+                    response.delete_cookie('sc'+str(index)+"_qty")
+                    index+=1
+
+            return response
         else:
             context['error_msg'] = "Invalid information"
     context['form'] = PaymentForm

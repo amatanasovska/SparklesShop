@@ -36,9 +36,9 @@
         <h3>Total: <span id="total_price">{{total_price}}</span>$</h3>
     </div>
 </div>
-
+{% if products|length is not 0 %}
 <div class="d-flex flex-row justify-content-end mx-5 w-75">
     <a class="btn proceed_btn" href="/checkout">Proceed</a>
 </div>
-
+{% endif %}
 {% endblock %}

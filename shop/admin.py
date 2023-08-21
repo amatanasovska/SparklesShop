@@ -85,3 +85,16 @@ class StoreAdmin(admin.ModelAdmin):
     #     return request.user.is_superuser
     
 admin.site.register(Store, StoreAdmin)
+
+class CreditCardAdmin(admin.ModelAdmin):
+    fields = ("user", "full_name", "expires_on")
+
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+    # def has_view_permission(self, request, obj=None):
+    #     return request.user.is_superuser
+     
+admin.site.register(CreditCard, CreditCardAdmin)

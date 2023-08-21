@@ -10,8 +10,8 @@
             <p>Choose payment option</p>
             {% if user.is_authenticated %}   
             {% for po in payment_options %}
-                <a>
-                    <div style="background-color: rgb(238, 213, 213);">
+                <a href="/pay_with_existing_card?id={{order.id}}&creditCardId={{po.id}}">
+                    <div style="background-color: rgb(238, 213, 213);" class="px-2 py-1">
                         <p>{{po.full_name}}</p>
                         <p>************</p>
                         <p>{{po.expires_on}}</p>
