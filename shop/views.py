@@ -11,6 +11,7 @@ import re
 from django.template import loader
 
 from sparklesapp.forms import *
+from django.db.models import Q
 
 # Group check 
 
@@ -557,3 +558,24 @@ def locator(request):
         
         context['shopping_cart_items'] = index
     return render(request, "user/locator.html", context)  
+
+def search_products(request):
+    context = dict()
+    context['brands'] = Brand.objects.all()
+    context['categories']= Category.objects.all()
+    q = request.GET.get('q', None)
+    products = Product.objects.filter(Q(name__contains=q) | Q(description__contains=q)).all()
+    context['products'] = products
+    context['title'] = f"Results for query {q}"
+    if not isinstance(request.user,AnonymousUser):
+        context['shopping_cart_items'] = len(ShoppingCart.objects.filter(user__id=request.user.id).all())
+    else:
+        index = 0
+        while(True):
+            cookie = request.COOKIES.get('sc'+ str(index), -1)
+            if cookie == -1:
+                break
+            index+=1
+        
+        context['shopping_cart_items'] = index
+    return render(request, "user/product_list.html", context=context)
