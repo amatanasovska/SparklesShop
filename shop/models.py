@@ -14,6 +14,8 @@ class Brand(models.Model):
     def __str__(self) -> str:
         return self.name
 
+
+
 class Product(models.Model):
     name = models.CharField(max_length=255)
     quantity = models.IntegerField()
@@ -22,8 +24,11 @@ class Product(models.Model):
     description = models.TextField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, blank=True, null=True)
+    visits = models.IntegerField(default=0)
     def __str__(self) -> str:
         return self.name
+    
+
 class ShoppingCart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -52,6 +57,7 @@ class Order(models.Model):
     payment_option = models.ForeignKey(CreditCard, on_delete=models.CASCADE, blank=True, null=True)
     total = models.IntegerField()
     paid = models.BooleanField()
+    date = models.DateTimeField()
 
 class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

@@ -52,11 +52,66 @@ def page_login(request):
             return render(request, "user/user_login.html", {'error_msg': "Invalid username or password"})
 
 
+def get_most_visited_product_info():
+    product = max(Product.objects.all(), key=lambda x: x.visits)
+    times_bought = len(OrderItem.objects.filter(product=product))
+    return {"product" : product, "times_bought": times_bought}
+
+def get_number_users_in_interval(start, end):
+    start_date = datetime.datetime.now()
+    if start!=0:
+        start_date = datetime.datetime.now() - datetime.timedelta(days = start)
+    
+    end_date = datetime.datetime.now()
+    if end!=0:
+        end_date = datetime.datetime.now() - datetime.timedelta(days = end)
+    
+    users = User.objects.filter(date_joined__gt=start_date, date_joined__lte=end_date)
+    print(f"Users: {users} Total {len(users)}")
+    return len(users)
+
+def get_revenue_in_interval(start, end):
+    start_date = datetime.datetime.now()
+    if start!=0:
+        start_date = datetime.datetime.now() - datetime.timedelta(days = start)
+    
+    end_date = datetime.datetime.now()
+    if end!=0:
+        end_date = datetime.datetime.now() - datetime.timedelta(days = end)
+    print(Order.objects.filter(paid=True).all())
+
+    orders = Order.objects.filter(date__gt=start_date, date__lte=end_date, paid=True)
+    print(f"Orders: {orders} Total {len(orders)}")
+
+    return sum(order.total for order in orders)
 
 @login_required(login_url="/admin_login")
 @user_passes_test(is_seller, login_url="/admin_login")
 def dashboard(request):
-    return render(request, "seller/dashboard.html")
+    context = dict()
+    context['most_visited_product'] = get_most_visited_product_info()
+    users_last_week = get_number_users_in_interval(14, 7)
+    users_this_week = get_number_users_in_interval(7,0)
+    msg_users =  f"{int(float(users_this_week)*100/float(users_last_week))}% more than last week" if users_this_week>users_last_week and users_last_week!=0 and users_this_week!=0 \
+                else f"{int(float(users_last_week)*100/float(users_this_week))}% less than last week" if users_last_week>users_this_week and users_last_week!=0 and users_this_week!=0 \
+                else f"No users this week. Last week {users_last_week} new users" if users_this_week==0 \
+                else f"No users last week. This week {users_this_week} new users" 
+    revenue_last_week = get_revenue_in_interval(14,7)
+    revenue_this_week = get_revenue_in_interval(7,0)
+    msg_revenue =  f"{int(float(revenue_this_week)*100/float(revenue_last_week))}% more than last week" if revenue_this_week>revenue_last_week and revenue_last_week!=0 and revenue_this_week!=0 \
+                else f"{int(float(revenue_last_week)*100/float(revenue_this_week))}% less than last week" if revenue_last_week>revenue_this_week and revenue_last_week!=0 and revenue_this_week!=0 \
+                else f"No revenue this week. Last week {revenue_last_week}$ revenue" if revenue_this_week==0 \
+                else f"No revenue last week. This week {revenue_this_week}$ revenue" 
+    context["user_info"] = msg_users
+    context["revenue_info"] = msg_revenue 
+    return render(request, "seller/dashboard.html", context=context)
+
+@login_required(login_url="/admin_login")
+@user_passes_test(is_seller, login_url="/admin_login")
+def stats(request):
+    context = dict()
+    context['products'] = Product.objects.all() 
+    return render(request, "seller/stats.html", context=context)
 
 @login_required(login_url="/admin_login")
 @user_passes_test(is_seller, login_url="/admin_login")
@@ -323,6 +378,8 @@ def product(request):
             comment.save()
         return render(request, "user/product_details.html", context=context)
     
+    product.visits = product.visits + 1
+    product.save()
     
     return render(request, "user/product_details.html", context=context)
 
@@ -469,6 +526,7 @@ def checkout(request):
             else:
                 order.user = request.user
                 context['payment_options'] = CreditCard.objects.filter(user=request.user).all()
+            order.date = datetime.datetime.now()
             order.save()
             context['order'] = order
 
@@ -584,6 +642,7 @@ def payment_info(request):
                 creditcard.save()
                 order.payment_option = creditcard
             order.total = total
+            order.date = datetime.datetime.now()
             order.paid = True
             order.save()
             context['order_items'] = order_items

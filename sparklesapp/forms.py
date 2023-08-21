@@ -70,7 +70,7 @@ class OrderForm(forms.ModelForm):
             field.field.widget.attrs["class"] = "form-control"
     class Meta:
         model = Order
-        exclude = ("user","payment_option","total","paid")
+        exclude = ("user","payment_option","total","paid","date")
         
 
 class PaymentForm(forms.ModelForm):

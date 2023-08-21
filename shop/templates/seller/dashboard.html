@@ -6,30 +6,38 @@
     <div class="px-5 py-3" style="width: 100%; height: 100%;">
         <div style="background-color: rgba(255, 255, 255, 0.5); width: 100%; height: 100%;">
             <div class="container py-5">
-                <div class="row py-5">
-                    <div class="col">Latest stats for your page</div>
-                    <div class="col">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent pellentesque augue eu tellus tincidunt, sodales eleifend ipsum dictum. Vivamus lobortis facilisis dolor et aliquet. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut suscipit sollicitudin dictum. In nec interdum nisl, sed euismod purus. Nulla placerat mi ut venenatis rutrum. Morbi lacus purus, facilisis ac turpis ac, bibendum hendrerit purus. Sed dignissim tortor nec massa facilisis aliquet. Suspendisse mollis mollis eros, in placerat massa elementum at. Vivamus efficitur aliquam risus ac fermentum. In suscipit tempor metus vitae lobortis. Nullam volutpat luctus varius. 
-                        Maecenas pulvinar pellentesque nunc sed posuere. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</div>
-                </div>
-                <div class="row my-5">
-                    <div class="col">
-                        <div class="row">Most visited page</div>
+                <div class="row py-5 my-5">
+                    <div class="col"><h1 style="color: rgb(186, 98, 98);">Latest stats for your page</h1></div>
+                    <div class="col" style="color: rgb(208, 156, 156); font-size: 25px;">
                         <div class="row">
-                            <div class="col">
-                                <img/>
+                            Users: {{user_info}}
+                        </div>    
+                        <div class="row">
+                            Revenue: {{revenue_info}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-5 p-5" style="background-color: rgb(231, 187, 187);">
+                    <div class="col">
+                        <div class="row" style="color: rgb(184, 103, 103); font-size: 30px;">Most visited page</div>
+                        <div class="row">
+                            <div class="col-md-3 m-5">
+                                <img src="{{most_visited_product.product.image.url}}" width="100%"/>
                             </div>
-                            <div class="col">
-                                <h3>Product name</h3>
-                                <p>info 1</p>
-                                <p>info 2</p>
-                                <p>info 3</p>
+                            <div class="col m-5" style="color: rgb(100, 86, 86);">
+                                <h3>{{most_visited_product.product.name}}</h3>
+                                <p>Visits: {{most_visited_product.product.visits}}</p>
+                                <p>Bought: {{most_visited_product.times_bought}} times</p>
                             </div>
                         </div>
                     </div>
 
                 </div>
+                <div class="d-flex flex-row justify-content-end fw-bold" style="color: rgb(181, 93, 93);">
+                    <a href="/stats">See more >>></a>
+                </div>
             </div>
+            
         </div>
     </div>
       

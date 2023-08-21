@@ -56,6 +56,8 @@ urlpatterns = [
     path("search_products", search_products_admin, name="search_products" ),
     path("search_orders", search_orders, name="search_orders"),
     path("search_users", search_users, name="search_users"),
-    path("pay_with_existing_card", pay_with_existing_card, name="pay_with_existing_card")
+    path("pay_with_existing_card", pay_with_existing_card, name="pay_with_existing_card"),
+    path("stats", stats, name="stats")
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
