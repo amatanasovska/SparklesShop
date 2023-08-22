@@ -45,10 +45,19 @@
       </a>
       <div class="card-body">
         <h5 class="card-title">{{product.name}}</h5>
-        <p class="card-text">{{product.price}}</p>
-        <div class="d-flex justify-content-center">
-          <a href="#" onclick="addToCart(1,'{{product.id}}')" class="btn add_cart_btn add_cart_btn_hp">Add to cart</a>
-      </div>      </div>
+        <p class="card-text">{{product.price}}$</p>
+        
+      {% if product.quantity != 0 %}
+      <div class="d-flex justify-content-center">
+        <a href="#" onclick="addToCart(1,'{{product.id}}')" class="btn add_cart_btn add_cart_btn_hp">Add to cart</a>
+    </div>  
+        {% endif %}
+        {% if product.quantity == 0 %}
+        <div class="row mx-3">
+            Out of stock.
+        </div>   
+        {% endif %} 
+    </div>
     </div>
   {% endfor %}
 

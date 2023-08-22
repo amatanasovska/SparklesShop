@@ -413,6 +413,7 @@ def add_to_cart(request):
     
     id = request.GET.get('id', None)
     qty = request.GET.get('qty', None)
+    product = Product.objects.filter(id=id).first()
     if isinstance(request.user,AnonymousUser):
         print("HERE")
         index = 0
@@ -426,11 +427,12 @@ def add_to_cart(request):
         
         response.set_cookie('sc'+str(index)+"_id", id)
         
-        response.set_cookie('sc'+str(index)+"_qty", qty)
+
+        response.set_cookie('sc'+str(index)+"_qty", (qty if product.quantity>=int(qty) else product.quantity))
     else:
         shopping_cart_item = ShoppingCart(user = request.user,
-                                            product = Product.objects.filter(id=id).first(),
-                                            quantity=qty)
+                                            product = product,
+                                            quantity=int(qty) if product.quantity>=int(qty) else product.quantity)
         shopping_cart_item.save()
     
     return response
@@ -439,12 +441,22 @@ def update_shopping_cart(request):
     id = request.GET.get('id', None)
     qty = request.GET.get('qty', None)
     response = HttpResponse()
+    
+
     if isinstance(request.user,AnonymousUser):
-        response.set_cookie('sc'+str(id)+"_qty", qty)
+        cookie_id = request.COOKIES.get('sc'+ str(id)+"_id", -1)
+        product = Product.objects.filter(id=cookie_id).first()
+        response.set_cookie('sc'+str(id)+"_qty", (qty if product.quantity>=int(qty) else product.quantity))
     else:
 
         shopping_cart_item = ShoppingCart.objects.filter(id=id).first()
-        shopping_cart_item.quantity = qty
+        # if shopping_cart_item.product.quantity<=qty:
+        #     shopping_cart_item.quantity = qty
+        # else:
+        #     shopping_cart_item.quantity = shopping_cart_item.product.quantity
+        # product = Product.objects.filter(id=shopping_cart_item.product.id).first()
+        shopping_cart_item.quantity = (int(qty) if shopping_cart_item.product.quantity>=int(qty) \
+                                        else shopping_cart_item.product.quantity)
         shopping_cart_item.save()
     
     return response
@@ -559,6 +571,7 @@ def pay_with_existing_card(request):
     order.paid = True
     order.save()
     context['order_items'] = order_items
+    
     response = render(request, "user/payment_succesful.html", context)
     if isinstance(request.user,AnonymousUser):
         index = 0
@@ -585,8 +598,12 @@ def add_order_items_cookie(orderId, request):
         order_item = OrderItem(product = Product.objects.filter(id=request.COOKIES.get('sc'+ str(index) + "_id", -1)).first(),
                                quantity = int(request.COOKIES.get('sc'+ str(index)+"_qty", -1)),
                                order = Order.objects.filter(id=orderId).first())
+        
         total += order_item.product.price * order_item.quantity
+        product = Product.objects.filter(id=order_item.product.id).first()
+        product.quantity = product.quantity- order_item.quantity
         order_item.save()
+        product.save()
         order_items.append(order_item)
         index+=1
     return total,order_items
@@ -601,7 +618,10 @@ def add_order_items_db(orderId, user):
                                order = Order.objects.filter(id=orderId).first())
         total += order_item.product.price * order_item.quantity
 
+        product = Product.objects.filter(id=order_item.product.id).first()
+        product.quantity = product.quantity- order_item.quantity
         order_item.save()
+        product.save()
         order_items.append(order_item)
         index+=1
     return total,order_items
