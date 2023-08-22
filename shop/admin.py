@@ -14,7 +14,7 @@ class CategoryAdmin(admin.ModelAdmin):
         return request.user.is_superuser
     def has_view_permission(self, request, obj=None):
         return request.user.is_superuser
-    
+
 admin.site.register(Category, CategoryAdmin)
 
 class ProductAdmin(admin.ModelAdmin):
@@ -27,7 +27,7 @@ class ProductAdmin(admin.ModelAdmin):
         return request.user.is_superuser
     # def has_view_permission(self, request, obj=None):
     #     return request.user.is_superuser
-    
+
 admin.site.register(Product, ProductAdmin)
 
 
@@ -41,7 +41,7 @@ class BrandAdmin(admin.ModelAdmin):
         return request.user.is_superuser
     # def has_view_permission(self, request, obj=None):
     #     return request.user.is_superuser
-    
+
 admin.site.register(Brand, BrandAdmin)
 
 class ShoppingCartAdmin(admin.ModelAdmin):
@@ -54,7 +54,7 @@ class ShoppingCartAdmin(admin.ModelAdmin):
         return request.user.is_superuser
     # def has_view_permission(self, request, obj=None):
     #     return request.user.is_superuser
-    
+
 admin.site.register(ShoppingCart, ShoppingCartAdmin)
 
 
@@ -69,7 +69,7 @@ class ProductPropertyAdmin(admin.ModelAdmin):
         return request.user.is_superuser
     # def has_view_permission(self, request, obj=None):
     #     return request.user.is_superuser
-    
+
 admin.site.register(ProductProperty, ProductPropertyAdmin)
 
 
@@ -83,7 +83,7 @@ class StoreAdmin(admin.ModelAdmin):
         return request.user.is_superuser
     # def has_view_permission(self, request, obj=None):
     #     return request.user.is_superuser
-    
+
 admin.site.register(Store, StoreAdmin)
 
 class CreditCardAdmin(admin.ModelAdmin):
@@ -96,7 +96,7 @@ class CreditCardAdmin(admin.ModelAdmin):
         return request.user.is_superuser
     # def has_view_permission(self, request, obj=None):
     #     return request.user.is_superuser
-     
+
 admin.site.register(CreditCard, CreditCardAdmin)
 
 class OrderAdmin(admin.ModelAdmin):
@@ -109,5 +109,18 @@ class OrderAdmin(admin.ModelAdmin):
         return request.user.is_superuser
     # def has_view_permission(self, request, obj=None):
     #     return request.user.is_superuser
-     
+
 admin.site.register(Order, OrderAdmin)
+
+class CommentAdmin(admin.ModelAdmin):
+    fields = ("user", )
+
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+    # def has_view_permission(self, request, obj=None):
+    #     return request.user.is_superuser
+
+admin.site.register(Comment, CommentAdmin)
