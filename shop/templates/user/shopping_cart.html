@@ -7,12 +7,12 @@
 <div class="w-100">
     {% for sc in products %}
         <div class="row card_custom p-5 m-5 w-75">
-            <div class="col-md-3">
+            <div class="col m-3">
                 <a href="/product?id={{sc.product.id}}">
                     <img src="{{sc.product.image.url}}" class="card-img-top" alt="..." style="width:200px">
                 </a>
             </div>
-            <div class="col-md-9">
+            <div class="col m-3">
                 <div class="card-body">
                     <div class="row">
                     <div class="col-md-9">
@@ -25,11 +25,11 @@
                     </div>
                   </div>
                     <p class="card-text my-5"><span id="{{forloop.counter0}}_price">{{sc.product.price}}</span>$</p>
-                    
+
                     <span>Quantity: </span><input id="{{forloop.counter0}}_qty" min="1" max="{{sc.product.quantity}}" onchange="updateValue(event, '{{sc.id}}')" value="{{sc.quantity}}" type="number" class="form-control w-25" style="display: inline-block;"/>
                 </div>
             </div>
-            
+
           </div>
     {% endfor %}
     <div class="mx-5">
