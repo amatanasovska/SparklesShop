@@ -81,7 +81,7 @@ def get_revenue_in_interval(start, end):
     print(Order.objects.filter(paid=True).all())
 
     orders = Order.objects.filter(date__gt=start_date, date__lte=end_date, paid=True)
-    print(f"Orders: {orders} Total {len(orders)}")
+    print(f"{start}-{end} Orders: {orders} Total {len(orders)}")
 
     return sum(order.total for order in orders)
 
@@ -92,16 +92,19 @@ def dashboard(request):
     context['most_visited_product'] = get_most_visited_product_info()
     users_last_week = get_number_users_in_interval(14, 7)
     users_this_week = get_number_users_in_interval(7,0)
-    msg_users =  f"{int(float(users_this_week)*100/float(users_last_week))}% more than last week" if users_this_week>users_last_week and users_last_week!=0 and users_this_week!=0 \
-                else f"{int(float(users_last_week)*100/float(users_this_week))}% less than last week" if users_last_week>users_this_week and users_last_week!=0 and users_this_week!=0 \
+    msg_users =  f"{int((float(users_this_week)-float(users_last_week))*100/float(users_last_week))}% more than last week" if users_this_week>=users_last_week and users_last_week!=0 and users_this_week!=0 \
+                else f"{int((float(users_last_week)-float(users_this_week))*100/float(users_this_week))}% less than last week" if users_last_week>users_this_week and users_last_week!=0 and users_this_week!=0 \
                 else f"No users this week. Last week {users_last_week} new users" if users_this_week==0 \
                 else f"No users last week. This week {users_this_week} new users"
+    print(f"Users last week: {users_last_week}, this week: {users_this_week}")
     revenue_last_week = get_revenue_in_interval(14,7)
     revenue_this_week = get_revenue_in_interval(7,0)
-    msg_revenue =  f"{int(float(revenue_this_week)*100/float(revenue_last_week))}% more than last week" if revenue_this_week>revenue_last_week and revenue_last_week!=0 and revenue_this_week!=0 \
-                else f"{int(float(revenue_last_week)*100/float(revenue_this_week))}% less than last week" if revenue_last_week>revenue_this_week and revenue_last_week!=0 and revenue_this_week!=0 \
+    msg_revenue =  f"{int((float(revenue_this_week)-float(revenue_last_week))*100/float(revenue_last_week))}% more than last week" if revenue_this_week>=revenue_last_week and revenue_last_week!=0 and revenue_this_week!=0 \
+                else f"{int((float(revenue_last_week)-float(revenue_this_week))*100/float(revenue_this_week))}% less than last week" if revenue_last_week>revenue_this_week and revenue_last_week!=0 and revenue_this_week!=0 \
                 else f"No revenue this week. Last week {revenue_last_week}$ revenue" if revenue_this_week==0 \
                 else f"No revenue last week. This week {revenue_this_week}$ revenue"
+    print(f"Revenue last week: {revenue_last_week}, this week: {revenue_this_week}")
+
     context["user_info"] = msg_users
     context["revenue_info"] = msg_revenue
     return render(request, "seller/dashboard.html", context=context)

@@ -18,7 +18,7 @@ class CategoryAdmin(admin.ModelAdmin):
 admin.site.register(Category, CategoryAdmin)
 
 class ProductAdmin(admin.ModelAdmin):
-    fields = ('name',)
+    exclude = ('visits', )
 
 
     def has_change_permission(self, request, obj=None):
@@ -72,6 +72,17 @@ class ProductPropertyAdmin(admin.ModelAdmin):
 
 admin.site.register(ProductProperty, ProductPropertyAdmin)
 
+class ProductPropertiesValueAdmin(admin.ModelAdmin):
+    fields = ('product_property', 'product', 'value')
+
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+
+
+admin.site.register(ProductPropertiesValue, ProductPropertiesValueAdmin)
 
 class StoreAdmin(admin.ModelAdmin):
     fields = ('location',)
@@ -94,13 +105,13 @@ class CreditCardAdmin(admin.ModelAdmin):
         return request.user.is_superuser
     def has_delete_permission(self, request, obj=None):
         return request.user.is_superuser
-    # def has_view_permission(self, request, obj=None):
-    #     return request.user.is_superuser
 
 admin.site.register(CreditCard, CreditCardAdmin)
 
 class OrderAdmin(admin.ModelAdmin):
-    fields = ("user", )
+    fields = ("user", "name", "surname", "address", "city",
+              "postal_code","email","payment_option","total",
+              "date","paid")
 
 
     def has_change_permission(self, request, obj=None):
@@ -112,8 +123,21 @@ class OrderAdmin(admin.ModelAdmin):
 
 admin.site.register(Order, OrderAdmin)
 
+class OrderItemAdmin(admin.ModelAdmin):
+    fields = ("product", "quantity", "order")
+
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+    # def has_view_permission(self, request, obj=None):
+    #     return request.user.is_superuser
+
+admin.site.register(OrderItem, OrderItemAdmin)
+
 class CommentAdmin(admin.ModelAdmin):
-    fields = ("user", )
+    fields = ("user", "product", "content")
 
 
     def has_change_permission(self, request, obj=None):
@@ -124,3 +148,12 @@ class CommentAdmin(admin.ModelAdmin):
     #     return request.user.is_superuser
 
 admin.site.register(Comment, CommentAdmin)
+
+class AvailabilityAdmin(admin.ModelAdmin):
+    fields = ("store", "product")
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+    
+admin.site.register(Availability, AvailabilityAdmin)
